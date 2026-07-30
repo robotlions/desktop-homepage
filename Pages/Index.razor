@@ -1,0 +1,332 @@
+@page "/"
+@page "/draggable-desktop"
+@layout DesktopLayout
+@inject IJSRuntime JS
+
+<HeadContent>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</HeadContent>
+
+<PageTitle>Draggable Desktop</PageTitle>
+
+<div class="row">
+	<div class="desktop-menubar">
+		<span class="menu-apple">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 26" width="18" height="20">
+				<rect x="0" y="0" width="24" height="18" rx="2" fill="#111" />
+				<rect x="2" y="2" width="20" height="13" fill="#fff" />
+				<rect x="9" y="18" width="6" height="4" fill="#111" />
+				<rect x="3" y="22" width="18" height="3" rx="1" fill="#111" />
+			</svg>
+		</span>
+		<a href="/" class="menu-link">Home</a>
+		<button type="button" class="menu-link menu-link-button" @onclick="OpenLauncher">Applications</button>
+		<button type="button" class="menu-link menu-link-button" @onclick="OpenPhotography">Photography</button>
+	</div>
+</div>
+<div class="row">
+	<div id="desktop-area" class="desktop-area col-12">
+
+		@if (folderVisible)
+		{
+			<div id="folder" class="folder" draggable="true" @onclick="ReleaseFromFolder"
+				 style="position:absolute; left:@((int)folderLeft)px; top:@((int)folderTop)px; z-index:10;">
+				@if (textFileInFolder)
+				{
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+						<!-- back tab of folder -->
+						<rect x="4" y="8" width="22" height="10" fill="#d4b56a" stroke="#000" stroke-width="2"/>
+						<!-- paper peeking out -->
+						<rect x="24" y="6" width="18" height="22" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
+						<rect x="36" y="6" width="6" height="6" fill="#d8d8d8" stroke="#000" stroke-width="1.5"/>
+						<line x1="27" y1="12" x2="39" y2="12" stroke="#9aa0a8" stroke-width="1.25"/>
+						<line x1="27" y1="16" x2="39" y2="16" stroke="#9aa0a8" stroke-width="1.25"/>
+						<line x1="27" y1="20" x2="34" y2="20" stroke="#9aa0a8" stroke-width="1.25"/>
+						<!-- folder body (front) -->
+						<rect x="4" y="14" width="40" height="30" fill="#e9c984" stroke="#000" stroke-width="2"/>
+						<!-- inner highlight strip -->
+						<rect x="6" y="16" width="36" height="4" fill="#f5e4b8"/>
+						<!-- right edge shadow -->
+						<rect x="40" y="16" width="3" height="26" fill="#b8902e" opacity="0.55"/>
+					</svg>
+				}
+				else
+				{
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+						<!-- back tab of folder -->
+						<rect x="4" y="8" width="22" height="10" fill="#d4b56a" stroke="#000" stroke-width="2"/>
+						<!-- folder body (front) -->
+						<rect x="4" y="14" width="40" height="30" fill="#e9c984" stroke="#000" stroke-width="2"/>
+						<!-- inner highlight strip -->
+						<rect x="6" y="16" width="36" height="4" fill="#f5e4b8"/>
+						<!-- right edge shadow -->
+						<rect x="40" y="16" width="3" height="26" fill="#b8902e" opacity="0.55"/>
+					</svg>
+				}
+			</div>
+		}
+
+		@if (textFileVisible)
+		{
+			<div id="text-file" class="text-file" draggable="true" @ondblclick="OpenNotepad"
+				 style="position:absolute; left:@((int)textFileLeft)px; top:@((int)textFileTop)px; z-index:10;">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+					<rect x="6" y="4" width="36" height="40" fill="#ffffff" stroke="#000" stroke-width="2"/>
+					<rect x="36" y="4" width="6" height="10" fill="#d8d8d8" stroke="#000" stroke-width="2"/>
+					<rect x="10" y="9" width="22" height="22" fill="#c3c9d0" stroke="#8b93a0" stroke-width="1.25"/>
+					<line x1="13" y1="14" x2="29" y2="14" stroke="#8b93a0" stroke-width="1.25"/>
+					<line x1="13" y1="18" x2="29" y2="18" stroke="#8b93a0" stroke-width="1.25"/>
+					<line x1="13" y1="22" x2="29" y2="22" stroke="#8b93a0" stroke-width="1.25"/>
+					<line x1="13" y1="26" x2="24" y2="26" stroke="#8b93a0" stroke-width="1.25"/>
+					<line x1="10" y1="35" x2="38" y2="35" stroke="#a0a6ad" stroke-width="1.5"/>
+					<line x1="10" y1="40" x2="38" y2="40" stroke="#a0a6ad" stroke-width="1.5"/>
+				</svg>
+			</div>
+		}
+
+		<div id="trash-container"
+			 class="trash @((!folderVisible || (!textFileVisible && !textFileInFolder)) ? "clickable" : "")"
+			 @onclick="ResetAll">
+			@if (!folderVisible || (!textFileVisible && !textFileInFolder))
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#b8c0c8" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+					<rect x="10" y="14" width="28" height="4" fill="#e8edf1" stroke="#000" stroke-width="2"/>
+					<line x1="16" y1="20" x2="32" y2="20" stroke="#6b737f" stroke-width="1.25"/>
+					<line x1="16" y1="26" x2="32" y2="26" stroke="#6b737f" stroke-width="1.25"/>
+					<line x1="16" y1="32" x2="31" y2="32" stroke="#6b737f" stroke-width="1.25"/>
+					<path d="M20 18 L18 12 L24 14 L22 6 L28 16 L26 12" fill="#ffffff" stroke="#000" stroke-width="1.25" stroke-linejoin="round"/>
+				</svg>
+			}
+			else
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#d2d8de" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+					<rect x="10" y="14" width="28" height="4" fill="#e8edf1" stroke="#000" stroke-width="2"/>
+					<line x1="16" y1="20" x2="32" y2="20" stroke="#7a8088" stroke-width="1.25"/>
+					<line x1="16" y1="26" x2="32" y2="26" stroke="#7a8088" stroke-width="1.25"/>
+					<line x1="16" y1="32" x2="31" y2="32" stroke="#7a8088" stroke-width="1.25"/>
+				</svg>
+			}
+		</div>
+
+		<div id="launcher-window" class="launcher-window draggable-window @(launcherOpen ? string.Empty : "window-hidden")">
+			<div id="launcher-titlebar" class="launcher-titlebar draggable-window-handle">
+				<span>APPLICATIONS</span>
+				<button class="launcher-close" @onclick="CloseLauncher">✕</button>
+			</div>
+			<div class="launcher-content">
+				<a href="/textinput" class="launcher-link">
+					<span class="launcher-icon" aria-hidden="true">
+						<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+							<rect x="3" y="3" width="26" height="26" rx="2" fill="#f6f8fb" stroke="#6b737f" stroke-width="1.5" />
+							<rect x="6" y="6" width="20" height="4" fill="#8aa2d8" />
+							<line x1="8" y1="15" x2="24" y2="15" stroke="#5f7dc0" stroke-width="1.5" />
+							<line x1="8" y1="19" x2="24" y2="19" stroke="#5f7dc0" stroke-width="1.5" />
+							<line x1="8" y1="23" x2="19" y2="23" stroke="#5f7dc0" stroke-width="1.5" />
+						</svg>
+					</span>
+					<span class="launcher-label">TextInput</span>
+				</a>
+				<a href="/message-generator" class="launcher-link">
+					<span class="launcher-icon" aria-hidden="true">
+						<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+							<rect x="3" y="4" width="26" height="19" rx="2" fill="#f7f0fd" stroke="#6b737f" stroke-width="1.5" />
+							<path d="M10 23 L10 28 L15 23 Z" fill="#f7f0fd" stroke="#6b737f" stroke-width="1.5" stroke-linejoin="round" />
+							<line x1="8" y1="10" x2="24" y2="10" stroke="#a06ac8" stroke-width="1.5" />
+							<line x1="8" y1="14" x2="22" y2="14" stroke="#a06ac8" stroke-width="1.5" />
+							<line x1="8" y1="18" x2="18" y2="18" stroke="#a06ac8" stroke-width="1.5" />
+						</svg>
+					</span>
+					<span class="launcher-label">MessageGenerator</span>
+				</a>
+				<a href="/weather" class="launcher-link">
+					<span class="launcher-icon" aria-hidden="true">
+						<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+							<circle cx="10" cy="12" r="3.5" fill="#ffd84f" stroke="#b1892b" stroke-width="1.2" />
+							<path d="M11 22 H24 C26.8 22 29 20.2 29 18 C29 15.8 27.2 14 24.8 14 C24.2 11.2 21.8 9 18.8 9 C15.8 9 13.4 11 12.8 13.7 C10 13.8 8 15.7 8 18 C8 20.2 9.9 22 11 22 Z" fill="#eaf3ff" stroke="#6b737f" stroke-width="1.5" stroke-linejoin="round" />
+						</svg>
+					</span>
+					<span class="launcher-label">Weather</span>
+				</a>
+				<a href="/counter" class="launcher-link">
+					<span class="launcher-icon" aria-hidden="true">
+						<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+							<rect x="5" y="3" width="22" height="26" rx="2" fill="#e8edf6" stroke="#6b737f" stroke-width="1.5" />
+							<rect x="8" y="6" width="16" height="6" fill="#f7f9fc" stroke="#9aa3b1" stroke-width="1" />
+							<rect x="8" y="15" width="4" height="4" fill="#7aa8db" />
+							<rect x="14" y="15" width="4" height="4" fill="#7aa8db" />
+							<rect x="20" y="15" width="4" height="4" fill="#7aa8db" />
+							<rect x="8" y="21" width="4" height="4" fill="#7aa8db" />
+							<rect x="14" y="21" width="4" height="4" fill="#7aa8db" />
+							<rect x="20" y="21" width="4" height="4" fill="#e75d53" stroke="#9c3a33" stroke-width="0.8" />
+						</svg>
+					</span>
+					<span class="launcher-label">Counter</span>
+				</a>
+			</div>
+		</div>
+
+		<div id="notepad-window" class="notepad-window draggable-window @(notepadOpen ? string.Empty : "window-hidden")">
+			<div id="notepad-titlebar" class="notepad-titlebar draggable-window-handle">
+				<span>NOTEPAD</span>
+				<button class="notepad-close" @onclick="CloseNotepad">✕</button>
+			</div>
+			<textarea @ref="_notepadRef" class="notepad-content" @bind="notepadContent" @bind:event="oninput"></textarea>
+		</div>
+
+		<div id="photography-window" class="photography-window draggable-window @(photographyOpen ? string.Empty : "window-hidden")">
+			<div id="photography-titlebar" class="photography-titlebar draggable-window-handle">
+				<span>PHOTOGRAPHY</span>
+				<button class="photography-close" @onclick="ClosePhotography">✕</button>
+			</div>
+			<div class="photography-content">
+				<a href="https://flickr.com/photos/183126740@N02/" target="_blank" rel="noopener noreferrer" class="launcher-link">
+					<span class="launcher-icon" aria-hidden="true">
+						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+							<rect x="4" y="6" width="34" height="6" rx="1.5" fill="#8a939c" stroke="#000" stroke-width="2"/>
+							<path d="M10 12 L13 8 L29 8 L32 12 Z" fill="#a7b0b8" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+							<path d="M2 13 L40 13 L40 44 L2 44 Z" fill="#c9ccd0" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+							<path d="M0 10 L9 10 L12 14 L2 14 Z" fill="#9aa3ab" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+							<circle cx="21" cy="27" r="11" fill="#4a5a6c" stroke="#000" stroke-width="2"/>
+							<circle cx="21" cy="27" r="7.5" fill="#2d4258" stroke="#000" stroke-width="1.5"/>
+							<circle cx="21" cy="27" r="4.5" fill="#7fa9d6"/>
+							<circle cx="18" cy="24.5" r="1.75" fill="#c8e0f5"/>
+							<rect x="14" y="15" width="14" height="2" fill="#e8eaed" stroke="#000" stroke-width="1.25"/>
+							<circle cx="35" cy="17" r="1.5" fill="#ff5d3b"/>
+						</svg>
+					</span>
+					<span class="launcher-label">Photos</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+@implements IAsyncDisposable
+
+@code {
+	private DotNetObjectReference<Index>? objRef;
+	private IJSObjectReference? _jsModule;
+	private ElementReference _notepadRef;
+	private bool notepadOpen = false;
+	private bool _focusNotepad = false;
+	private string notepadContent = "";
+	private bool launcherOpen = true;
+	private bool photographyOpen = false;
+	private bool folderVisible = true;
+	private double folderLeft = 60.0;
+	private double folderTop = 12.0;
+	private bool textFileVisible = true;
+	private double textFileLeft = 60.0;
+	private double textFileTop = 85.0;
+	private bool textFileInFolder = false;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			objRef = DotNetObjectReference.Create(this);
+			_jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Index.razor.js");
+		}
+		if (_jsModule != null && objRef != null)
+		{
+			await _jsModule.InvokeVoidAsync("registerFolderDrag", objRef);
+			await _jsModule.InvokeVoidAsync("registerDesktopWindowDrag");
+			await _jsModule.InvokeVoidAsync("registerLauncherIconDrag");
+		}
+		if (_focusNotepad)
+		{
+			_focusNotepad = false;
+			try { await _notepadRef.FocusAsync(); } catch { }
+		}
+	}
+
+	private void OpenNotepad()
+	{
+		notepadOpen = true;
+		_focusNotepad = true;
+	}
+
+	private void CloseNotepad() => notepadOpen = false;
+
+	private void CloseLauncher() => launcherOpen = false;
+
+	private void OpenLauncher() => launcherOpen = true;
+
+	private void ClosePhotography() => photographyOpen = false;
+
+	private void OpenPhotography() => photographyOpen = true;
+
+	[JSInvokable]
+	public Task OnFolderMoved(double left, double top)
+	{
+		folderLeft = left;
+		folderTop = top;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	[JSInvokable]
+	public Task OnFolderDeleted()
+	{
+		folderVisible = false;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	[JSInvokable]
+	public Task OnTextFileMoved(double left, double top)
+	{
+		textFileLeft = left;
+		textFileTop = top;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	[JSInvokable]
+	public Task OnTextFileDeleted()
+	{
+		textFileVisible = false;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	[JSInvokable]
+	public Task OnTextFileDroppedInFolder()
+	{
+		textFileVisible = false;
+		textFileInFolder = true;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	private void ReleaseFromFolder()
+	{
+		if (!textFileInFolder) return;
+		textFileInFolder = false;
+		textFileVisible = true;
+		textFileLeft = folderLeft;
+		textFileTop = folderTop + 85;
+	}
+
+	private void ResetAll()
+	{
+		if (folderVisible && (textFileVisible || textFileInFolder)) return;
+		if (!folderVisible) { folderVisible = true; folderLeft = 60.0; folderTop = 12.0; }
+		if (!textFileVisible && !textFileInFolder) { textFileVisible = true; textFileLeft = 60.0; textFileTop = 85.0; }
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		try { if (_jsModule != null) await _jsModule.InvokeVoidAsync("unregisterFolderDrag"); } catch { }
+		try { if (_jsModule != null) await _jsModule.InvokeVoidAsync("unregisterDesktopWindowDrag"); } catch { }
+		if (_jsModule != null) await _jsModule.DisposeAsync();
+		objRef?.Dispose();
+	}
+}

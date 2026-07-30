@@ -1,0 +1,5 @@
+::deep .desktop-page {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+}
