@@ -303,6 +303,7 @@ export function registerDesktopWindowDrag() {
 	bindWindow('launcher-window', 'launcher-titlebar');
 	bindWindow('notepad-window', 'notepad-titlebar');
 	bindWindow('photography-window', 'photography-titlebar');
+	bindWindow('websites-window', 'websites-titlebar');
 }
 
 export function unregisterDesktopWindowDrag() {
