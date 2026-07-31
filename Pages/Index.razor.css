@@ -439,7 +439,7 @@
 
 .photography-window {
 	position: absolute;
-	top: 45%;
+	top: 30%;
 	left: 60%;
 	transform: translateX(-50%);
 	width: 520px;
@@ -660,8 +660,12 @@
 	color: #000;
 	border: 1px solid transparent;
 	padding: 4px;
-	cursor: pointer;
+	cursor: grab;
 	user-select: none;
+}
+
+.documents-link.dragging {
+	opacity: 0.6;
 }
 
 .documents-link:hover,

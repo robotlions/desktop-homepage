@@ -297,9 +297,9 @@ export function unregisterDesktopWindowDrag() {
 }
 
 export function registerLauncherIconDrag() {
-	var contents = document.querySelectorAll('.launcher-content, .photography-content');
+	var contents = document.querySelectorAll('.launcher-content, .photography-content, .documents-content');
 	contents.forEach(function (content) {
-		var links = content.querySelectorAll('.launcher-link');
+		var links = content.querySelectorAll('.launcher-link, .documents-link');
 		links.forEach(function (link) {
 			if (_launcherIconBound.has(link)) return;
 			_launcherIconBound.add(link);
