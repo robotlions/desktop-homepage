@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chadmusick.com</title>
     <base href="/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="preload" id="webassembly" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
@@ -16,11 +18,12 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div class="boot-window" role="status" aria-live="polite">
+            <div class="boot-text">Loading...</div>
+            <div class="boot-blocks" aria-hidden="true">
+                <span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span><span class="boot-block"></span>
+            </div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">
@@ -28,6 +31,29 @@
         <a href="." class="reload">Reload</a>
         <span class="dismiss">🗙</span>
     </div>
+    <script>
+        (function () {
+            var blocks = document.querySelectorAll('.boot-block');
+            var timer = setInterval(update, 150);
+
+            function update() {
+                var host = document.getElementById('app');
+                if (!host || !host.querySelector('.boot-window')) {
+                    clearInterval(timer);
+                    return;
+                }
+                var raw = getComputedStyle(document.documentElement).getPropertyValue('--blazor-load-percentage');
+                var pct = parseFloat(raw);
+                if (isNaN(pct)) pct = 0;
+                var count = Math.round(blocks.length * pct / 100);
+                blocks.forEach(function (b, i) {
+                    b.classList.toggle('on', i < count);
+                });
+            }
+
+            update();
+        })();
+    </script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
 </body>
 

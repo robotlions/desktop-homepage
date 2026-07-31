@@ -67,39 +67,49 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
-.loading-progress {
-    position: absolute;
-    display: block;
-    width: 8rem;
-    height: 8rem;
-    inset: 20vh 0 auto 0;
-    margin: 0 auto 0 auto;
-}
-
-    .loading-progress circle {
-        fill: none;
-        stroke: #e0e0e0;
-        stroke-width: 0.6rem;
-        transform-origin: 50% 50%;
-        transform: rotate(-90deg);
-    }
-
-        .loading-progress circle:last-child {
-            stroke: #1b6ec2;
-            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
-            transition: stroke-dasharray 0.05s ease-in-out;
-        }
-
-.loading-progress-text {
-    position: absolute;
+.boot-window {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(360px, 90vw);
+    padding: 16px 16px 14px;
+    background: #c0c0c0;
+    border: 2px solid #000;
+    box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 6px 6px 0 rgba(0, 0, 0, 0.55);
+    font-family: 'VT323', 'Courier New', monospace;
     text-align: center;
-    font-weight: bold;
-    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 
-    .loading-progress-text:after {
-        content: var(--blazor-load-percentage-text, "Loading");
-    }
+.boot-text {
+    font-size: 26px;
+    line-height: 1;
+    color: #000;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.boot-blocks {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px;
+    background: #fff;
+    border: 1px solid #000;
+    box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+}
+
+.boot-block {
+    flex: 0 1 22px;
+    width: 22px;
+    height: 14px;
+    background: #ffffff;
+}
+
+.boot-block.on {
+    background: #000080;
+    box-shadow: inset 1px 1px 0 #0080ff, inset -1px -1px 0 #000000;
+}
 
 code {
     color: #c02d76;
