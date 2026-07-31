@@ -21,6 +21,7 @@
 			</svg>
 		</span>
 		<button type="button" class="menu-link menu-link-button" @onclick="OpenLauncher">Applications</button>
+		<button type="button" class="menu-link menu-link-button" @onclick="OpenDocuments">Documents</button>
 		<button type="button" class="menu-link menu-link-button" @onclick="OpenWebsites">World Wide Websites</button>
 		<button type="button" class="menu-link menu-link-button" @onclick="OpenPhotography">Photography</button>
 	</div>
@@ -28,15 +29,15 @@
 <div class="row">
 	<div id="desktop-area" class="desktop-area col-12">
 
-		@if (folderVisible)
+		@if (folderVisible && !folderHidden)
 		{
 			<div id="folder" class="folder" draggable="true" @onclick="ReleaseFromFolder"
 				 style="position:absolute; left:@((int)folderLeft)px; top:@((int)folderTop)px; z-index:10;">
 				@if (textFileInFolder)
 				{
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
 						<!-- back tab of folder -->
-						<rect x="4" y="8" width="22" height="10" fill="#d4b56a" stroke="#000" stroke-width="2"/>
+						<rect x="6" y="6" width="20" height="9" fill="#d4b56a" stroke="#000" stroke-width="2"/>
 						<!-- paper peeking out -->
 						<rect x="24" y="6" width="18" height="22" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
 						<rect x="36" y="6" width="6" height="6" fill="#d8d8d8" stroke="#000" stroke-width="1.5"/>
@@ -44,24 +45,24 @@
 						<line x1="27" y1="16" x2="39" y2="16" stroke="#9aa0a8" stroke-width="1.25"/>
 						<line x1="27" y1="20" x2="34" y2="20" stroke="#9aa0a8" stroke-width="1.25"/>
 						<!-- folder body (front) -->
-						<rect x="4" y="14" width="40" height="30" fill="#e9c984" stroke="#000" stroke-width="2"/>
+						<rect x="4" y="12" width="40" height="30" fill="#e9c984" stroke="#000" stroke-width="2"/>
 						<!-- inner highlight strip -->
-						<rect x="6" y="16" width="36" height="4" fill="#f5e4b8"/>
+						<rect x="6" y="14" width="36" height="4" fill="#f5e4b8"/>
 						<!-- right edge shadow -->
-						<rect x="40" y="16" width="3" height="26" fill="#b8902e" opacity="0.55"/>
+						<rect x="40" y="14" width="3" height="26" fill="#b8902e" opacity="0.55"/>
 					</svg>
 				}
 				else
 				{
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
 						<!-- back tab of folder -->
-						<rect x="4" y="8" width="22" height="10" fill="#d4b56a" stroke="#000" stroke-width="2"/>
+						<rect x="6" y="6" width="20" height="9" fill="#d4b56a" stroke="#000" stroke-width="2"/>
 						<!-- folder body (front) -->
-						<rect x="4" y="14" width="40" height="30" fill="#e9c984" stroke="#000" stroke-width="2"/>
+						<rect x="4" y="12" width="40" height="30" fill="#e9c984" stroke="#000" stroke-width="2"/>
 						<!-- inner highlight strip -->
-						<rect x="6" y="16" width="36" height="4" fill="#f5e4b8"/>
+						<rect x="6" y="14" width="36" height="4" fill="#f5e4b8"/>
 						<!-- right edge shadow -->
-						<rect x="40" y="16" width="3" height="26" fill="#b8902e" opacity="0.55"/>
+						<rect x="40" y="14" width="3" height="26" fill="#b8902e" opacity="0.55"/>
 					</svg>
 				}
 			</div>
@@ -69,19 +70,10 @@
 
 		@if (textFileVisible)
 		{
-			<div id="text-file" class="text-file" draggable="true" @ondblclick="OpenNotepad"
+			<div id="text-file" class="text-file" draggable="true" @onclick="OpenNotepad"
 				 style="position:absolute; left:@((int)textFileLeft)px; top:@((int)textFileTop)px; z-index:10;">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
-					<rect x="6" y="4" width="36" height="40" fill="#ffffff" stroke="#000" stroke-width="2"/>
-					<rect x="36" y="4" width="6" height="10" fill="#d8d8d8" stroke="#000" stroke-width="2"/>
-					<rect x="10" y="9" width="22" height="22" fill="#c3c9d0" stroke="#8b93a0" stroke-width="1.25"/>
-					<line x1="13" y1="14" x2="29" y2="14" stroke="#8b93a0" stroke-width="1.25"/>
-					<line x1="13" y1="18" x2="29" y2="18" stroke="#8b93a0" stroke-width="1.25"/>
-					<line x1="13" y1="22" x2="29" y2="22" stroke="#8b93a0" stroke-width="1.25"/>
-					<line x1="13" y1="26" x2="24" y2="26" stroke="#8b93a0" stroke-width="1.25"/>
-					<line x1="10" y1="35" x2="38" y2="35" stroke="#a0a6ad" stroke-width="1.5"/>
-					<line x1="10" y1="40" x2="38" y2="40" stroke="#a0a6ad" stroke-width="1.5"/>
-				</svg>
+				<img src="icons/PROGM029.PNG" alt="Notepad" width="64" height="64">
+				<span class="desktop-app-icon-label">Notepad</span>
 			</div>
 		}
 
@@ -93,11 +85,11 @@
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#b8c0c8" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-					<rect x="10" y="14" width="28" height="4" fill="#e8edf1" stroke="#000" stroke-width="2"/>
-					<line x1="16" y1="20" x2="32" y2="20" stroke="#6b737f" stroke-width="1.25"/>
-					<line x1="16" y1="26" x2="32" y2="26" stroke="#6b737f" stroke-width="1.25"/>
-					<line x1="16" y1="32" x2="31" y2="32" stroke="#6b737f" stroke-width="1.25"/>
+					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#c0c0c0" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+					<rect x="10" y="14" width="28" height="4" fill="#e8e8e8" stroke="#000" stroke-width="2"/>
+					<line x1="16" y1="20" x2="32" y2="20" stroke="#808080" stroke-width="1.25"/>
+					<line x1="16" y1="26" x2="32" y2="26" stroke="#808080" stroke-width="1.25"/>
+					<line x1="16" y1="32" x2="31" y2="32" stroke="#808080" stroke-width="1.25"/>
 					<path d="M20 18 L18 12 L24 14 L22 6 L28 16 L26 12" fill="#ffffff" stroke="#000" stroke-width="1.25" stroke-linejoin="round"/>
 				</svg>
 			}
@@ -106,61 +98,76 @@
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#d2d8de" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-					<rect x="10" y="14" width="28" height="4" fill="#e8edf1" stroke="#000" stroke-width="2"/>
-					<line x1="16" y1="20" x2="32" y2="20" stroke="#7a8088" stroke-width="1.25"/>
-					<line x1="16" y1="26" x2="32" y2="26" stroke="#7a8088" stroke-width="1.25"/>
-					<line x1="16" y1="32" x2="31" y2="32" stroke="#7a8088" stroke-width="1.25"/>
+					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#c0c0c0" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+					<rect x="10" y="14" width="28" height="4" fill="#e8e8e8" stroke="#000" stroke-width="2"/>
+					<line x1="16" y1="20" x2="32" y2="20" stroke="#808080" stroke-width="1.25"/>
+					<line x1="16" y1="26" x2="32" y2="26" stroke="#808080" stroke-width="1.25"/>
+					<line x1="16" y1="32" x2="31" y2="32" stroke="#808080" stroke-width="1.25"/>
 				</svg>
 			}
+		</div>
+
+		<div id="desktop-icon-applications" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)applicationsLeft)px; top:@((int)applicationsTop)px;" @onclick="OpenLauncher">
+			<img src="icons/PROGM004.PNG" alt="Applications" width="64" height="64">
+			<span class="desktop-app-icon-label">Applications</span>
+		</div>
+
+		<div id="desktop-icon-websites" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)websitesLeft)px; top:@((int)websitesTop)px;" @onclick="OpenWebsites">
+			<img src="icons/RASST001.PNG" alt="World Wide Websites" width="64" height="64">
+			<span class="desktop-app-icon-label">World Wide Websites</span>
+		</div>
+
+		<div id="desktop-icon-photography" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)photographyLeft)px; top:@((int)photographyTop)px;" @onclick="OpenPhotography">
+			<img src="icons/PROGM013.PNG" alt="Photography" width="64" height="64">
+			<span class="desktop-app-icon-label">Photography</span>
+		</div>
+
+		<div id="desktop-icon-documents" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)documentsLeft)px; top:@((int)documentsTop)px;" @onclick="OpenDocuments">
+			<img src="icons/MSMAI014.PNG" alt="Documents" width="64" height="64">
+			<span class="desktop-app-icon-label">Documents</span>
 		</div>
 
 		<div id="launcher-window" class="launcher-window draggable-window @(launcherOpen ? string.Empty : "window-hidden")">
 			<div id="launcher-titlebar" class="launcher-titlebar draggable-window-handle">
 				<span>APPLICATIONS</span>
-				<button class="launcher-close" @onclick="CloseLauncher">✕</button>
+				<button class="launcher-close" @onclick="CloseLauncher" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
 			</div>
 			<div class="launcher-content">
 				<a href="https://github.com/robotlions/moderncoffeecurrent" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
 						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<path d="M10 16 L10 36 Q10 42 16 42 L30 42 Q36 42 36 36 L36 16 Z" fill="#ffffff" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<path d="M36 20 Q44 20 44 27 Q44 34 36 34" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<ellipse cx="23" cy="18" rx="13" ry="2.5" fill="#4a2c1a" stroke="#000" stroke-width="1.5"/>
-							<ellipse cx="23" cy="17" rx="11" ry="1.5" fill="#6b3e26" opacity="0.7"/>
+							<rect x="18" y="4" width="4" height="6" fill="#000" stroke="#000" stroke-width="1"/>
+							<rect x="24" y="10" width="4" height="6" fill="#000" stroke="#000" stroke-width="1"/>
+							<rect x="8" y="16" width="26" height="26" fill="#ffffff" stroke="#000" stroke-width="2"/>
+							<path d="M34 20 H40 Q46 20 46 24 Q46 32 40 32 H36" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+							<path d="M38 22 H41 Q43 22 43 24 Q43 30 41 30 H38" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
+							<rect x="10" y="18" width="22" height="7" fill="#3a2a14" stroke="#000" stroke-width="1.5"/>
+							<rect x="10" y="18" width="22" height="2" fill="#6b4a24"/>
 						</svg>
 					</span>
 					<span class="launcher-label">Modern Coffee</span>
 				</a>
 				<a href="https://github.com/robotlions/in-key-mobile" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
-						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<circle cx="12" cy="34" r="7" fill="#1a1a1a" stroke="#000" stroke-width="2"/>
-							<circle cx="12" cy="34" r="3" fill="#ffffff"/>
-							<line x1="18" y1="34" x2="19" y2="10" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
-							<line x1="19" y1="10" x2="19" y2="34" stroke="#000" stroke-width="2.5"/>
-							<path d="M19 10 L20 11 Q20 16 19 16 Q19 11 18 10" fill="#000" stroke="#000" stroke-width="1"/>
-							<path d="M19 16 L20 17 Q20 22 19 22 Q19 17 18 16" fill="#000" stroke="#000" stroke-width="1"/>
-							<circle cx="30" cy="38" r="6" fill="#1a1a1a" stroke="#000" stroke-width="2"/>
-							<circle cx="30" cy="38" r="2.5" fill="#ffffff"/>
-							<line x1="35" y1="38" x2="36" y2="16" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
-							<line x1="36" y1="16" x2="36" y2="38" stroke="#000" stroke-width="2.5"/>
-							<path d="M36 16 L37 17 Q37 22 36 22 Q36 17 35 16" fill="#000" stroke="#000" stroke-width="1"/>
-						</svg>
+						<img src="icons/SOUND001.PNG" alt="In Key" width="64" height="64">
 					</span>
 					<span class="launcher-label">In Key</span>
 				</a>
 				<a href="https://github.com/robotlions/AtomicPress" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
 						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<rect x="18" y="3" width="12" height="6" rx="1.5" fill="#6b737f" stroke="#000" stroke-width="2"/>
-							<path d="M16 9 L16 22 L32 22 L32 9 Z" fill="#c9ccd0" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<rect x="16" y="22" width="16" height="7" fill="#e4e8ef" stroke="#000" stroke-width="2"/>
-							<path d="M14 29 L14 40 Q14 43 17 43 L31 43 Q34 43 34 40 L34 29 Z" fill="#9aa3ab" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<line x1="16" y1="33" x2="32" y2="33" stroke="#000" stroke-width="1.5"/>
-							<line x1="16" y1="37" x2="32" y2="37" stroke="#000" stroke-width="1.5"/>
-							<ellipse cx="24" cy="12" rx="5" ry="1.5" fill="#5a6168" opacity="0.7"/>
-							<rect x="20" y="15" width="8" height="4" fill="#7a8088" stroke="#000" stroke-width="1.25"/>
+							<rect x="14" y="2" width="20" height="20" fill="#ffffff" stroke="#000" stroke-width="2"/>
+							<rect x="14" y="2" width="8" height="8" fill="#c0c0c0" stroke="#000" stroke-width="1.5"/>
+							<line x1="18" y1="14" x2="30" y2="14" stroke="#808080" stroke-width="1.5"/>
+							<line x1="18" y1="18" x2="28" y2="18" stroke="#808080" stroke-width="1.5"/>
+							<rect x="9" y="20" width="30" height="6" fill="#808080" stroke="#000" stroke-width="2"/>
+							<rect x="5" y="26" width="38" height="12" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
+							<rect x="11" y="30" width="26" height="4" fill="#000"/>
+							<rect x="18" y="38" width="12" height="8" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
 						</svg>
 					</span>
 					<span class="launcher-label">AtomicPress</span>
@@ -168,31 +175,63 @@
 			</div>
 		</div>
 
+		<div id="documents-window" class="documents-window draggable-window @(documentsOpen ? string.Empty : "window-hidden")">
+			<div id="documents-titlebar" class="documents-titlebar draggable-window-handle">
+				<span>DOCUMENTS</span>
+				<button class="documents-close" @onclick="CloseDocuments" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
+			</div>
+			<div class="documents-content">
+				<div class="documents-link" role="button" tabindex="0" @onclick="OpenReadme" @onkeydown="OnReadmeKeyDown">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/NOTEP001.PNG" alt="README.TXT" width="64" height="64">
+					</span>
+					<span class="launcher-label">README.TXT</span>
+				</div>
+			</div>
+		</div>
+
 		<div id="notepad-window" class="notepad-window draggable-window @(notepadOpen ? string.Empty : "window-hidden")">
 			<div id="notepad-titlebar" class="notepad-titlebar draggable-window-handle">
 				<span>NOTEPAD</span>
-				<button class="notepad-close" @onclick="CloseNotepad">✕</button>
+				<button class="notepad-close" @onclick="CloseNotepad" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
 			</div>
-			<textarea @ref="_notepadRef" class="notepad-content" @bind="notepadContent" @bind:event="oninput"></textarea>
+			<div class="notepad-body">
+				<textarea @ref="_notepadRef" class="notepad-content" @bind="notepadContent" @bind:event="oninput"></textarea>
+				@if (string.IsNullOrEmpty(notepadContent))
+				{
+					<span class="notepad-cursor" aria-hidden="true"></span>
+				}
+			</div>
 		</div>
 
 		<div id="photography-window" class="photography-window draggable-window @(photographyOpen ? string.Empty : "window-hidden")">
 			<div id="photography-titlebar" class="photography-titlebar draggable-window-handle">
 				<span>PHOTOGRAPHY</span>
-				<button class="photography-close" @onclick="ClosePhotography">✕</button>
+				<button class="photography-close" @onclick="ClosePhotography" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
 			</div>
 			<div class="photography-content">
 				<a href="https://flickr.com/photos/183126740@N02/" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
 						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<rect x="4" y="6" width="34" height="6" rx="1.5" fill="#8a939c" stroke="#000" stroke-width="2"/>
-							<path d="M10 12 L13 8 L29 8 L32 12 Z" fill="#a7b0b8" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<path d="M2 13 L40 13 L40 44 L2 44 Z" fill="#c9ccd0" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<path d="M0 10 L9 10 L12 14 L2 14 Z" fill="#9aa3ab" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<circle cx="21" cy="27" r="11" fill="#4a5a6c" stroke="#000" stroke-width="2"/>
-							<circle cx="21" cy="27" r="7.5" fill="#2d4258" stroke="#000" stroke-width="2"/>
-							<rect x="14" y="15" width="14" height="2" fill="#e8eaed" stroke="#000" stroke-width="1.25"/>
-							<circle cx="35" cy="17" r="1.5" fill="#ff5d3b"/>
+							<rect x="10" y="4" width="18" height="6" fill="#808080" stroke="#000" stroke-width="2"/>
+							<rect x="4" y="10" width="40" height="8" fill="#808080" stroke="#000" stroke-width="2"/>
+							<rect x="4" y="18" width="40" height="26" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
+							<circle cx="24" cy="31" r="9" fill="#0000a8" stroke="#000" stroke-width="2"/>
+							<circle cx="24" cy="31" r="6" fill="#000080"/>
+							<circle cx="21" cy="28" r="2" fill="#ffffff"/>
+							<circle cx="38" cy="14" r="1.5" fill="#a80000"/>
 						</svg>
 					</span>
 					<span class="launcher-label">Photos</span>
@@ -203,60 +242,52 @@
 		<div id="websites-window" class="websites-window draggable-window @(websitesOpen ? string.Empty : "window-hidden")">
 			<div id="websites-titlebar" class="websites-titlebar draggable-window-handle">
 				<span>WORLD WIDE WEBSITES</span>
-				<button class="websites-close" @onclick="CloseWebsites">✕</button>
+				<button class="websites-close" @onclick="CloseWebsites" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
 			</div>
 			<div class="launcher-content">
 				<a href="https://dnd35.robotlions.com" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
-						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<path d="M24 4 L42 14 L42 34 L24 44 L6 34 L6 14 Z" fill="#8b5e3c" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<path d="M24 4 L42 14 L24 24 L6 14 Z" fill="#a67048" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
-							<path d="M24 24 L42 14 L42 34 L24 44 Z" fill="#6b4528" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
-							<text x="24" y="29" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#f5e6d3" stroke="#000" stroke-width="0.4">20</text>
-						</svg>
+						<img src="icons/PROGM028.PNG" alt="D&D Characters" width="64" height="64">
 					</span>
 					<span class="launcher-label">D&D Characters</span>
 				</a>
 				<a href="https://scale-o-matic.robotlions.com" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
-						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<rect x="4" y="8" width="40" height="24" rx="1.5" fill="#e8edf0" stroke="#000" stroke-width="2"/>
-							<rect x="6" y="10" width="36" height="20" fill="#c9ccd0"/>
-							<line x1="9" y1="10" x2="9" y2="30" stroke="#000" stroke-width="1.5"/>
-							<line x1="9" y1="10" x2="9" y2="14" stroke="#000" stroke-width="3"/>
-							<line x1="14" y1="10" x2="14" y2="30" stroke="#000" stroke-width="1"/>
-							<line x1="14" y1="10" x2="14" y2="13" stroke="#000" stroke-width="2.5"/>
-							<line x1="19" y1="10" x2="19" y2="30" stroke="#000" stroke-width="1.5"/>
-							<line x1="19" y1="10" x2="19" y2="16" stroke="#000" stroke-width="3"/>
-							<line x1="24" y1="10" x2="24" y2="30" stroke="#000" stroke-width="1"/>
-							<line x1="24" y1="10" x2="24" y2="13" stroke="#000" stroke-width="2.5"/>
-							<line x1="29" y1="10" x2="29" y2="30" stroke="#000" stroke-width="1.5"/>
-							<line x1="29" y1="10" x2="29" y2="16" stroke="#000" stroke-width="3"/>
-							<line x1="34" y1="10" x2="34" y2="30" stroke="#000" stroke-width="1"/>
-							<line x1="34" y1="10" x2="34" y2="13" stroke="#000" stroke-width="2.5"/>
-							<line x1="39" y1="10" x2="39" y2="30" stroke="#000" stroke-width="1.5"/>
-							<text x="24" y="42" text-anchor="middle" font-size="8" font-family="monospace" font-weight="bold" fill="#5a4a3c">C</text>
-						</svg>
+						<img src="icons/PROGM030.PNG" alt="Scale-O-Matic" width="64" height="64">
 					</span>
 					<span class="launcher-label">Scale-O-Matic</span>
 				</a>
 				<a href="https://goldbox.robotlions.com" target="_blank" rel="noopener noreferrer" class="launcher-link">
 					<span class="launcher-icon" aria-hidden="true">
-						<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-							<path d="M6 22 L6 40 Q6 44 10 44 L38 44 Q42 44 42 40 L42 22 Z" fill="#d4a52a" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<path d="M6 22 L10 14 L38 14 L42 22 Z" fill="#e9be45" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
-							<rect x="6" y="22" width="36" height="5" fill="#f0d66a" stroke="#000" stroke-width="1.5"/>
-							<rect x="20" y="18" width="8" height="4" fill="#8b6914" stroke="#000" stroke-width="1.5"/>
-							<rect x="22" y="22" width="4" height="22" fill="#8b6914" stroke="#000" stroke-width="1.5"/>
-							<circle cx="11" cy="24.5" r="1.5" fill="#8b6914"/>
-							<circle cx="37" cy="24.5" r="1.5" fill="#8b6914"/>
-							<rect x="20" y="30" width="8" height="6" fill="#fff" opacity="0.15"/>
-						</svg>
+						<img src="icons/WINSE001.PNG" alt="RPG Editor" width="64" height="64">
 					</span>
 					<span class="launcher-label">RPG Editor</span>
 				</a>
 			</div>
 		</div>
+
+		@if (readmeModalOpen)
+		{
+			<div class="readme-modal-overlay" @onclick="CloseReadme">
+				<div class="readme-modal" role="dialog" aria-modal="true" aria-label="README.TXT" @onclick:stopPropagation>
+					<div class="readme-modal-titlebar">
+						<span>README.TXT</span>
+						<button class="readme-modal-close" @onclick="CloseReadme" aria-label="Close">
+							<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+								<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+							</svg>
+						</button>
+					</div>
+					<div class="readme-modal-body">
+						<div>Your onramp to the information superhighway.</div>
+					</div>
+				</div>
+			</div>
+		}
 	</div>
 </div>
 
@@ -269,16 +300,27 @@
 	private bool notepadOpen = false;
 	private bool _focusNotepad = false;
 	private string notepadContent = "";
-	private bool launcherOpen = true;
+	private bool launcherOpen = false;
+	private bool documentsOpen = true;
+	private bool readmeModalOpen = false;
 	private bool photographyOpen = false;
 	private bool websitesOpen = false;
 	private bool folderVisible = true;
+	private bool folderHidden = true;
 	private double folderLeft = 60.0;
 	private double folderTop = 12.0;
 	private bool textFileVisible = true;
 	private double textFileLeft = 60.0;
 	private double textFileTop = 85.0;
 	private bool textFileInFolder = false;
+	private double applicationsLeft = 160.0;
+	private double applicationsTop = 12.0;
+	private double websitesLeft = 20.0;
+	private double websitesTop = 200.0;
+	private double photographyLeft = 20.0;
+	private double photographyTop = 330.0;
+	private double documentsLeft = 285.0;
+	private double documentsTop = 12.0;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -290,6 +332,7 @@
 		if (_jsModule != null && objRef != null)
 		{
 			await _jsModule.InvokeVoidAsync("registerFolderDrag", objRef);
+			await _jsModule.InvokeVoidAsync("registerAppIconDrag", objRef);
 			await _jsModule.InvokeVoidAsync("registerDesktopWindowDrag");
 			await _jsModule.InvokeVoidAsync("registerLauncherIconDrag");
 		}
@@ -310,6 +353,26 @@
 	private void CloseNotepad() => notepadOpen = false;
 
 	private void CloseLauncher() => launcherOpen = false;
+
+	private void CloseDocuments() => documentsOpen = false;
+
+	private async Task OpenDocuments()
+	{
+		documentsOpen = true;
+		await BringWindowToFront("documents-window");
+	}
+
+	private void OpenReadme() => readmeModalOpen = true;
+
+	private void CloseReadme() => readmeModalOpen = false;
+
+	private void OnReadmeKeyDown(KeyboardEventArgs e)
+	{
+		if (e.Key == "Enter" || e.Key == " ")
+		{
+			OpenReadme();
+		}
+	}
 
 	private async Task OpenLauncher()
 	{
@@ -384,6 +447,32 @@
 		return Task.CompletedTask;
 	}
 
+	[JSInvokable]
+	public Task OnAppIconMoved(string iconId, double left, double top)
+	{
+		switch (iconId)
+		{
+			case "desktop-icon-applications":
+				applicationsLeft = left;
+				applicationsTop = top;
+				break;
+			case "desktop-icon-websites":
+				websitesLeft = left;
+				websitesTop = top;
+				break;
+			case "desktop-icon-photography":
+				photographyLeft = left;
+				photographyTop = top;
+				break;
+			case "desktop-icon-documents":
+				documentsLeft = left;
+				documentsTop = top;
+				break;
+		}
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
 	private void ReleaseFromFolder()
 	{
 		if (!textFileInFolder) return;
@@ -403,6 +492,7 @@
 	public async ValueTask DisposeAsync()
 	{
 		try { if (_jsModule != null) await _jsModule.InvokeVoidAsync("unregisterFolderDrag"); } catch { }
+		try { if (_jsModule != null) await _jsModule.InvokeVoidAsync("unregisterAppIconDrag"); } catch { }
 		try { if (_jsModule != null) await _jsModule.InvokeVoidAsync("unregisterDesktopWindowDrag"); } catch { }
 		if (_jsModule != null) await _jsModule.DisposeAsync();
 		objRef?.Dispose();

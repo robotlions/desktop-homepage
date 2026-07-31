@@ -1,5 +1,6 @@
 var _isDraggingTrash = false;
 var _folderDrag = {};
+var _appIconDrag = {};
 var _desktopWindowDrag = { bindings: [] };
 var _launcherIconBound = new WeakSet();
 var _windowFocusBound = new WeakSet();
@@ -232,6 +233,72 @@ export function unregisterFolderDrag() {
 	_folderDrag = {};
 }
 
+export function registerAppIconDrag(dotNetRef) {
+	unregisterAppIconDrag();
+
+	var desktopEl = document.getElementById('desktop-area');
+	if (!desktopEl) return;
+
+	var defaults = {
+		'desktop-icon-applications': { left: 160, top: 12 },
+		'desktop-icon-websites': { left: 20, top: 200 },
+		'desktop-icon-photography': { left: 20, top: 330 },
+		'desktop-icon-documents': { left: 285, top: 12 }
+	};
+
+	var icons = Array.prototype.slice.call(document.querySelectorAll('.desktop-app-icon'));
+	var bindings = [];
+
+	icons.forEach(function (icon) {
+		var offsetX = 0, offsetY = 0;
+
+		var onDragStart = function (e) {
+			if (e.dataTransfer) e.dataTransfer.setData('text/plain', 'desktop-icon');
+			icon.classList.add('dragging');
+			var rect = icon.getBoundingClientRect();
+			offsetX = e.clientX - rect.left;
+			offsetY = e.clientY - rect.top;
+		};
+
+		var onDragEnd = function (e) {
+			icon.classList.remove('dragging');
+			var def = defaults[icon.id] || { left: 20, top: 200 };
+			var dr = desktopEl.getBoundingClientRect();
+			var inside = e.clientX >= dr.left && e.clientX <= dr.right && e.clientY >= dr.top && e.clientY <= dr.bottom;
+			if (inside) {
+				var newLeft = Math.max(0, Math.min(e.clientX - dr.left - offsetX, dr.width - icon.offsetWidth));
+				var newTop = Math.max(0, Math.min(e.clientY - dr.top - offsetY, dr.height - icon.offsetHeight));
+				icon.style.left = newLeft + 'px';
+				icon.style.top = newTop + 'px';
+				try { dotNetRef.invokeMethodAsync('OnAppIconMoved', icon.id, newLeft, newTop).catch(function () { }); } catch (e2) { }
+			} else {
+				icon.style.left = def.left + 'px';
+				icon.style.top = def.top + 'px';
+				try { dotNetRef.invokeMethodAsync('OnAppIconMoved', icon.id, def.left, def.top).catch(function () { }); } catch (e2) { }
+			}
+		};
+
+		icon.addEventListener('dragstart', onDragStart);
+		icon.addEventListener('dragend', onDragEnd);
+		bindings.push({ el: icon, onDragStart: onDragStart, onDragEnd: onDragEnd });
+	});
+
+	_appIconDrag = { bindings: bindings };
+}
+
+export function unregisterAppIconDrag() {
+	var state = _appIconDrag;
+	if (!state || !state.bindings) {
+		_appIconDrag = {};
+		return;
+	}
+	state.bindings.forEach(function (b) {
+		try { b.el.removeEventListener('dragstart', b.onDragStart); } catch (e) { }
+		try { b.el.removeEventListener('dragend', b.onDragEnd); } catch (e) { }
+	});
+	_appIconDrag = {};
+}
+
 export function registerDesktopWindowDrag() {
 	unregisterDesktopWindowDrag();
 
@@ -304,6 +371,7 @@ export function registerDesktopWindowDrag() {
 	bindWindow('notepad-window', 'notepad-titlebar');
 	bindWindow('photography-window', 'photography-titlebar');
 	bindWindow('websites-window', 'websites-titlebar');
+	bindWindow('documents-window', 'documents-titlebar');
 }
 
 export function unregisterDesktopWindowDrag() {
