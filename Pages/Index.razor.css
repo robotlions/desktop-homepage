@@ -215,21 +215,6 @@
 	opacity: 0.6;
 }
 
-.folder {
-	user-select: none;
-	cursor: grab;
-	filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.3));
-	line-height: 0;
-}
-
-.folder.over {
-	filter: drop-shadow(0 0 8px rgba(0, 160, 0, 0.7));
-}
-
-.folder.dragging {
-	opacity: 0.6;
-}
-
 .trash.dragging {
 	opacity: 0.6;
 }

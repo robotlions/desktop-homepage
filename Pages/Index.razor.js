@@ -1,84 +1,34 @@
 var _isDraggingTrash = false;
-var _folderDrag = {};
+var _textFileDrag = {};
 var _appIconDrag = {};
 var _desktopWindowDrag = { bindings: [] };
 var _launcherIconBound = new WeakSet();
 var _windowFocusBound = new WeakSet();
 var _topZ = 40;
 
-export function registerFolderDrag(dotNetRef) {
-	unregisterFolderDrag();
+export function registerTextFileDrag(dotNetRef) {
+	unregisterTextFileDrag();
 
-	var _folderDeletedByTrash = false;
 	var _textFileDeletedByTrash = false;
-	var _textFileDroppedInFolder = false;
-	var _isDraggingFolder = false;
 
-	function attachFolderHandlers() {
-		var folder = document.getElementById('folder');
-		if (!folder) return null;
+	var textFile = document.getElementById('text-file');
+	var desktopEl = document.getElementById('desktop-area');
+	var textFileHandlers = null;
 
-		var folderOffsetX = 0, folderOffsetY = 0;
-		var desktopEl = document.querySelector('.desktop-area');
-
-		var onDragStart = function (e) {
-			if (e.dataTransfer) e.dataTransfer.setData('text/plain', 'folder');
-			folder.classList.add('dragging');
-			_folderDeletedByTrash = false;
-			_isDraggingFolder = true;
-			var rect = folder.getBoundingClientRect();
-			folderOffsetX = e.clientX - rect.left;
-			folderOffsetY = e.clientY - rect.top;
-		};
-		var onDragEnd = function (e) {
-			folder.classList.remove('dragging');
-			_isDraggingFolder = false;
-			if (_folderDeletedByTrash) return;
-			var dr = desktopEl ? desktopEl.getBoundingClientRect() : null;
-			var inside = dr && e.clientX >= dr.left && e.clientX <= dr.right && e.clientY >= dr.top && e.clientY <= dr.bottom;
-			if (inside) {
-				var newLeft = Math.max(0, Math.min(e.clientX - dr.left - folderOffsetX, dr.width - folder.offsetWidth));
-				var newTop = Math.max(0, Math.min(e.clientY - dr.top - folderOffsetY, dr.height - folder.offsetHeight));
-				folder.style.left = newLeft + 'px';
-				folder.style.top = newTop + 'px';
-				try { dotNetRef.invokeMethodAsync('OnFolderMoved', newLeft, newTop).catch(function () { }); } catch (e2) { }
-			} else {
-				folder.style.left = '60px';
-				folder.style.top = '12px';
-				try { dotNetRef.invokeMethodAsync('OnFolderMoved', 60, 12).catch(function () { }); } catch (e2) { }
-			}
-		};
-
-		try { folder.removeEventListener('dragstart', onDragStart); } catch (e) { }
-		try { folder.removeEventListener('dragend', onDragEnd); } catch (e) { }
-
-		folder.addEventListener('dragstart', onDragStart);
-		folder.addEventListener('dragend', onDragEnd);
-
-		return { el: folder, onDragStart: onDragStart, onDragEnd: onDragEnd };
-	}
-
-	var folderHandlers = attachFolderHandlers();
-
-	function attachTextFileHandlers() {
-		var textFile = document.getElementById('text-file');
-		if (!textFile) return null;
-
+	if (textFile) {
 		var offsetX = 0, offsetY = 0;
-		var desktopEl = document.querySelector('.desktop-area');
 
 		var onDragStart = function (e) {
 			if (e.dataTransfer) e.dataTransfer.setData('text/plain', 'text-file');
 			textFile.classList.add('dragging');
 			_textFileDeletedByTrash = false;
-			_textFileDroppedInFolder = false;
 			var rect = textFile.getBoundingClientRect();
 			offsetX = e.clientX - rect.left;
 			offsetY = e.clientY - rect.top;
 		};
 		var onDragEnd = function (e) {
 			textFile.classList.remove('dragging');
-			if (_textFileDeletedByTrash || _textFileDroppedInFolder) return;
+			if (_textFileDeletedByTrash) return;
 			var dr = desktopEl ? desktopEl.getBoundingClientRect() : null;
 			var inside = dr && e.clientX >= dr.left && e.clientX <= dr.right && e.clientY >= dr.top && e.clientY <= dr.bottom;
 			if (inside) {
@@ -88,9 +38,9 @@ export function registerFolderDrag(dotNetRef) {
 				textFile.style.top = newTop + 'px';
 				try { dotNetRef.invokeMethodAsync('OnTextFileMoved', newLeft, newTop).catch(function () { }); } catch (e2) { }
 			} else {
-				textFile.style.left = '60px';
-				textFile.style.top = '85px';
-				try { dotNetRef.invokeMethodAsync('OnTextFileMoved', 60, 85).catch(function () { }); } catch (e2) { }
+				textFile.style.left = '150px';
+				textFile.style.top = '162px';
+				try { dotNetRef.invokeMethodAsync('OnTextFileMoved', 150, 162).catch(function () { }); } catch (e2) { }
 			}
 		};
 
@@ -99,36 +49,7 @@ export function registerFolderDrag(dotNetRef) {
 		textFile.addEventListener('dragstart', onDragStart);
 		textFile.addEventListener('dragend', onDragEnd);
 
-		return { el: textFile, onDragStart: onDragStart, onDragEnd: onDragEnd };
-	}
-
-	var textFileHandlers = attachTextFileHandlers();
-
-	// register folder as drop target for text file only (not trash)
-	var folderDropEl = document.getElementById('folder');
-	var folderDropHandlers = null;
-	if (folderDropEl) {
-		var onFolderDragOver = function (ev) {
-			if (_isDraggingFolder || _isDraggingTrash) return;
-			ev.preventDefault();
-			if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move';
-			folderDropEl.classList.add('over');
-		};
-		var onFolderDragLeave = function (ev) { folderDropEl.classList.remove('over'); };
-		var onFolderDrop = function (ev) {
-			if (_isDraggingFolder || _isDraggingTrash) return;
-			ev.preventDefault();
-			folderDropEl.classList.remove('over');
-			var dragType = ev.dataTransfer ? ev.dataTransfer.getData('text/plain') : '';
-			if (dragType === 'text-file') {
-				_textFileDroppedInFolder = true;
-				try { dotNetRef.invokeMethodAsync('OnTextFileDroppedInFolder').catch(function () { }); } catch (e) { }
-			}
-		};
-		folderDropEl.addEventListener('dragover', onFolderDragOver);
-		folderDropEl.addEventListener('dragleave', onFolderDragLeave);
-		folderDropEl.addEventListener('drop', onFolderDrop);
-		folderDropHandlers = { el: folderDropEl, onDragOver: onFolderDragOver, onDragLeave: onFolderDragLeave, onDrop: onFolderDrop };
+		textFileHandlers = { el: textFile, onDragStart: onDragStart, onDragEnd: onDragEnd };
 	}
 
 	// desktop-area is the single valid drop zone
@@ -136,11 +57,10 @@ export function registerFolderDrag(dotNetRef) {
 	var desktopDropEl = document.getElementById('desktop-area');
 	if (desktopDropEl) {
 		var onDesktopDragOver = function (ev) { ev.preventDefault(); if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move'; };
-		var onDesktopDragLeave = function () { };
 		var onDesktopDrop = function (ev) { ev.preventDefault(); };
 		desktopDropEl.addEventListener('dragover', onDesktopDragOver);
 		desktopDropEl.addEventListener('drop', onDesktopDrop);
-		hotspots.push({ el: desktopDropEl, onDragOver: onDesktopDragOver, onDragLeave: onDesktopDragLeave, onDrop: onDesktopDrop });
+		hotspots.push({ el: desktopDropEl, onDragOver: onDesktopDragOver, onDrop: onDesktopDrop });
 	}
 
 	// register trash container as a drop target and drag source
@@ -154,10 +74,7 @@ export function registerFolderDrag(dotNetRef) {
 			ev.preventDefault();
 			this.classList.remove('over');
 			var dragType = ev.dataTransfer ? ev.dataTransfer.getData('text/plain') : '';
-			if (dragType === 'folder') {
-				_folderDeletedByTrash = true;
-				try { dotNetRef.invokeMethodAsync('OnFolderDeleted').catch(function () { }); } catch (e) { }
-			} else if (dragType === 'text-file') {
+			if (dragType === 'text-file') {
 				_textFileDeletedByTrash = true;
 				try { dotNetRef.invokeMethodAsync('OnTextFileDeleted').catch(function () { }); } catch (e) { }
 			}
@@ -170,7 +87,6 @@ export function registerFolderDrag(dotNetRef) {
 
 		// trash as drag source — repositions it within the desktop
 		var trashOffsetX = 0, trashOffsetY = 0;
-		var desktopEl = document.querySelector('.desktop-area');
 		var onTrashDragStart = function (e) {
 			_isDraggingTrash = true;
 			trash.classList.add('dragging');
@@ -198,39 +114,30 @@ export function registerFolderDrag(dotNetRef) {
 		trashDragHandlers = { el: trash, onDragStart: onTrashDragStart, onDragEnd: onTrashDragEnd };
 	}
 
-	_folderDrag = { folderHandlers: folderHandlers, textFileHandlers: textFileHandlers, folderDropHandlers: folderDropHandlers, hotspots: hotspots, dotNetRef: dotNetRef, trashDragHandlers: trashDragHandlers };
+	_textFileDrag = { textFileHandlers: textFileHandlers, hotspots: hotspots, dotNetRef: dotNetRef, trashDragHandlers: trashDragHandlers };
 }
 
-export function unregisterFolderDrag() {
-	var state = _folderDrag;
+export function unregisterTextFileDrag() {
+	var state = _textFileDrag;
 	if (!state) return;
 	try {
-		if (state.folderHandlers) {
-			try { if (state.folderHandlers.el) state.folderHandlers.el.removeEventListener('dragstart', state.folderHandlers.onDragStart); } catch (e) { }
-			try { if (state.folderHandlers.el) state.folderHandlers.el.removeEventListener('dragend', state.folderHandlers.onDragEnd); } catch (e) { }
+		if (state.textFileHandlers) {
+			try { if (state.textFileHandlers.el) state.textFileHandlers.el.removeEventListener('dragstart', state.textFileHandlers.onDragStart); } catch (e) { }
+			try { if (state.textFileHandlers.el) state.textFileHandlers.el.removeEventListener('dragend', state.textFileHandlers.onDragEnd); } catch (e) { }
 		}
 		if (state.hotspots) {
 			state.hotspots.forEach(function (h) {
-				h.el.removeEventListener('dragover', h.onDragOver);
-				h.el.removeEventListener('dragleave', h.onDragLeave);
-				h.el.removeEventListener('drop', h.onDrop);
+				try { h.el.removeEventListener('dragover', h.onDragOver); } catch (e) { }
+				try { if (h.onDragLeave) h.el.removeEventListener('dragleave', h.onDragLeave); } catch (e) { }
+				try { h.el.removeEventListener('drop', h.onDrop); } catch (e) { }
 			});
 		}
 		if (state.trashDragHandlers) {
 			try { state.trashDragHandlers.el.removeEventListener('dragstart', state.trashDragHandlers.onDragStart); } catch (e) { }
 			try { state.trashDragHandlers.el.removeEventListener('dragend', state.trashDragHandlers.onDragEnd); } catch (e) { }
 		}
-		if (state.textFileHandlers) {
-			try { if (state.textFileHandlers.el) state.textFileHandlers.el.removeEventListener('dragstart', state.textFileHandlers.onDragStart); } catch (e) { }
-			try { if (state.textFileHandlers.el) state.textFileHandlers.el.removeEventListener('dragend', state.textFileHandlers.onDragEnd); } catch (e) { }
-		}
-		if (state.folderDropHandlers) {
-			try { state.folderDropHandlers.el.removeEventListener('dragover', state.folderDropHandlers.onDragOver); } catch (e) { }
-			try { state.folderDropHandlers.el.removeEventListener('dragleave', state.folderDropHandlers.onDragLeave); } catch (e) { }
-			try { state.folderDropHandlers.el.removeEventListener('drop', state.folderDropHandlers.onDrop); } catch (e) { }
-		}
 	} catch (e) { }
-	_folderDrag = {};
+	_textFileDrag = {};
 }
 
 export function registerAppIconDrag(dotNetRef) {
@@ -240,10 +147,10 @@ export function registerAppIconDrag(dotNetRef) {
 	if (!desktopEl) return;
 
 	var defaults = {
-		'desktop-icon-applications': { left: 160, top: 12 },
-		'desktop-icon-websites': { left: 20, top: 200 },
-		'desktop-icon-photography': { left: 20, top: 330 },
-		'desktop-icon-documents': { left: 285, top: 12 }
+		'desktop-icon-applications': { left: 20, top: 12 },
+		'desktop-icon-websites': { left: 20, top: 162 },
+		'desktop-icon-photography': { left: 20, top: 312 },
+		'desktop-icon-documents': { left: 150, top: 12 }
 	};
 
 	var icons = Array.prototype.slice.call(document.querySelectorAll('.desktop-app-icon'));
