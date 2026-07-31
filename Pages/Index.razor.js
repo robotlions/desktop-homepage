@@ -373,3 +373,10 @@ export function registerLauncherIconDrag() {
 		});
 	});
 }
+
+export function bringToFront(windowId) {
+	var win = document.getElementById(windowId);
+	if (!win) return;
+	_topZ += 1;
+	win.style.zIndex = _topZ;
+}

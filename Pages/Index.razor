@@ -90,7 +90,7 @@
 			 @onclick="ResetAll">
 			@if (!folderVisible || (!textFileVisible && !textFileInFolder))
 			{
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
 					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#b8c0c8" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
@@ -103,7 +103,7 @@
 			}
 			else
 			{
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="51" height="51">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 					<path d="M14 15 Q14 6 24 6 Q34 6 34 15" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
 					<path d="M10 15 L38 15 L35 42 L13 42 Z" fill="#d2d8de" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
@@ -300,25 +300,46 @@
 		}
 	}
 
-	private void OpenNotepad()
+	private async Task OpenNotepad()
 	{
 		notepadOpen = true;
 		_focusNotepad = true;
+		await BringWindowToFront("notepad-window");
 	}
 
 	private void CloseNotepad() => notepadOpen = false;
 
 	private void CloseLauncher() => launcherOpen = false;
 
-	private void OpenLauncher() => launcherOpen = true;
+	private async Task OpenLauncher()
+	{
+		launcherOpen = true;
+		await BringWindowToFront("launcher-window");
+	}
 
 	private void ClosePhotography() => photographyOpen = false;
 
-	private void OpenPhotography() => photographyOpen = true;
+	private async Task OpenPhotography()
+	{
+		photographyOpen = true;
+		await BringWindowToFront("photography-window");
+	}
 
 	private void CloseWebsites() => websitesOpen = false;
 
-	private void OpenWebsites() => websitesOpen = true;
+	private async Task OpenWebsites()
+	{
+		websitesOpen = true;
+		await BringWindowToFront("websites-window");
+	}
+
+	private async Task BringWindowToFront(string windowId)
+	{
+		if (_jsModule != null)
+		{
+			await _jsModule.InvokeVoidAsync("bringToFront", windowId);
+		}
+	}
 
 	[JSInvokable]
 	public Task OnFolderMoved(double left, double top)

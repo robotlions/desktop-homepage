@@ -150,7 +150,7 @@
 	min-height: 320px;
 	background: linear-gradient(180deg, #7fb7ff, #cfeaff);
 	position: relative;
-	height: 85vh;
+	height: calc(100vh - 35px);
 	overflow: hidden;
 }
 
@@ -201,8 +201,8 @@
 /* Trash container */
 .trash {
 	position: absolute;
-	right: 24px;
-	bottom: 24px;
+	right: 48px;
+	bottom: 72px;
 	cursor: default;
 	filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.3));
 	transition: filter 0.15s;
@@ -340,8 +340,8 @@
 
 .photography-window {
 	position: absolute;
-	top: 22%;
-	left: 50%;
+	top: 45%;
+	left: 60%;
 	transform: translateX(-50%);
 	width: 520px;
 	height: 380px;
