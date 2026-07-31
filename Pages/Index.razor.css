@@ -446,3 +446,30 @@
 	color: #fff;
 	outline: none;
 }
+
+@media (max-width: 768px) {
+	.launcher-window,
+	.notepad-window,
+	.photography-window,
+	.websites-window {
+		width: 90vw;
+		max-width: 480px;
+		height: 70vh;
+		max-height: 340px;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+@media (max-width: 480px) {
+	.launcher-window,
+	.notepad-window,
+	.photography-window,
+	.websites-window {
+		width: 88vw;
+		max-width: 400px;
+		height: 68vh;
+		max-height: 320px;
+	}
+}
