@@ -42,7 +42,7 @@
 
 		<div id="desktop-icon-trash" class="desktop-app-icon desktop-trash-icon" role="button" draggable="true" @onclick="OpenTrash">
 			<img src="icons/MSMAI016.PNG" alt="Trash Can" width="64" height="64">
-			<span class="desktop-app-icon-label">Trash Can</span>
+			<span class="desktop-app-icon-label">Trash</span>
 		</div>
 
 		<div id="launcher-window" class="launcher-window draggable-window @(launcherOpen ? string.Empty : "window-hidden")">
@@ -226,7 +226,7 @@
 
 		<div id="trash-window" class="trash-window draggable-window @(trashOpen ? string.Empty : "window-hidden")">
 			<div id="trash-titlebar" class="trash-titlebar draggable-window-handle">
-				<span>TRASH CAN</span>
+				<span>TRASH</span>
 				<button class="trash-close" @onclick="CloseTrash" aria-label="Close">
 					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
 						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
