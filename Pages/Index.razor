@@ -89,7 +89,7 @@
 			<span class="desktop-app-icon-label">Productivity</span>
 		</div>
 
-		<div id="desktop-icon-email" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)emailLeft)px; top:@((int)emailTop)px;" @onclick="OpenEmail">
+		<div id="desktop-icon-email" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)emailLeft)px; top:@((int)emailTop)px;" @onclick="OpenContact">
 			<img src="icons/PROGM035.PNG" alt="Electronic Mail" width="64" height="64">
 			<span class="desktop-app-icon-label">Electronic Mail</span>
 		</div>
@@ -264,6 +264,33 @@
 			</div>
 		</div>
 
+		<div id="contact-window" class="contact-window draggable-window @(contactOpen ? string.Empty : "window-hidden")">
+			<div id="contact-titlebar" class="contact-titlebar draggable-window-handle">
+				<span>ELECTRONIC MAIL</span>
+				<button class="contact-close" @onclick="CloseContact" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
+			</div>
+			<div class="contact-body">
+				<label class="contact-label" for="contact-name">Name</label>
+				<input id="contact-name" class="contact-input" type="text" @bind="contactName" @bind:event="oninput" />
+				<label class="contact-label" for="contact-email">Your Email</label>
+				<input id="contact-email" class="contact-input" type="email" @bind="contactEmail" @bind:event="oninput" />
+				<label class="contact-label" for="contact-message">Message</label>
+				<textarea id="contact-message" class="contact-textarea" @bind="contactMessage" @bind:event="oninput"></textarea>
+				<div class="contact-actions">
+					<button type="button" class="contact-send" @onclick="SendContact" disabled="@contactSending">SEND</button>
+					<a class="contact-mailto" href="mailto:chad@chadmusick.com">or email directly</a>
+				</div>
+				@if (!string.IsNullOrEmpty(contactStatus))
+				{
+					<div class="contact-status">@contactStatus</div>
+				}
+			</div>
+		</div>
+
 		@if (readmeModalOpen)
 		{
 			<div class="readme-modal-overlay" @onclick="CloseReadme">
@@ -316,6 +343,14 @@
 	private double gamesTop = 312.0;
 	private double emailLeft = 280.0;
 	private double emailTop = 12.0;
+	private bool contactOpen = false;
+	private double contactLeft = 430.0;
+	private double contactTop = 100.0;
+	private string contactName = "";
+	private string contactEmail = "";
+	private string contactMessage = "";
+	private string contactStatus = "";
+	private bool contactSending = false;
 
 	private const string GoldenAxeUrl = "/games/axe.jsdos";
 	private const string PoolOfRadianceUrl = "/games/POOLRAD.jsdos";
@@ -426,6 +461,51 @@
 	private void OpenEmail()
 	{
 		Nav.NavigateTo("mailto:chad@chadmusick.com");
+	}
+
+	private void CloseContact() => contactOpen = false;
+
+	private async Task OpenContact()
+	{
+		contactOpen = true;
+		contactStatus = "";
+		await BringWindowToFront("contact-window");
+	}
+
+	private async Task SendContact()
+	{
+		if (contactSending) return;
+		if (string.IsNullOrWhiteSpace(contactName) || string.IsNullOrWhiteSpace(contactMessage))
+		{
+			contactStatus = "ENTER A NAME AND MESSAGE";
+			return;
+		}
+		contactSending = true;
+		contactStatus = "SENDING...";
+		try
+		{
+			if (_jsModule != null)
+			{
+				var ok = await _jsModule.InvokeAsync<bool>("submitContactForm", new
+				{
+					name = contactName,
+					email = contactEmail,
+					message = contactMessage
+				});
+				contactStatus = ok ? "MESSAGE SENT" : "SEND FAILED - TRY AGAIN";
+				if (ok)
+				{
+					contactName = "";
+					contactEmail = "";
+					contactMessage = "";
+				}
+			}
+		}
+		catch
+		{
+			contactStatus = "SEND FAILED - TRY AGAIN";
+		}
+		contactSending = false;
 	}
 
 	private async Task OnGamesKeyDown(KeyboardEventArgs e, string gameUrl)

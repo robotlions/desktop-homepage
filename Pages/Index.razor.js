@@ -282,6 +282,7 @@ export function registerDesktopWindowDrag() {
 	bindWindow('documents-window', 'documents-titlebar');
 	bindWindow('dosbox-window', 'dosbox-titlebar');
 	bindWindow('games-window', 'games-titlebar');
+	bindWindow('contact-window', 'contact-titlebar');
 }
 
 export function unregisterDesktopWindowDrag() {
@@ -396,5 +397,28 @@ export async function startDosbox(gameUrl) {
 		_dosboxBooted = false;
 		_dosboxUrl = null;
 		return null;
+	}
+}
+
+export async function submitContactForm(data) {
+	try {
+		var resp = await fetch('https://formsubmit.co/ajax/chad@chadmusick.com', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+			body: JSON.stringify({
+				name: data.name,
+				email: data.email,
+				message: data.message,
+				_subject: 'desktop-homepage contact message'
+			})
+		});
+		var json = await resp.json();
+		return json && json.success === 'true';
+	} catch (e) {
+		console.error('Contact form failed:', e);
+		return false;
 	}
 }
