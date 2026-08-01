@@ -150,7 +150,8 @@ export function registerAppIconDrag(dotNetRef) {
 		'desktop-icon-applications': { left: 20, top: 12 },
 		'desktop-icon-websites': { left: 20, top: 162 },
 		'desktop-icon-photography': { left: 20, top: 312 },
-		'desktop-icon-documents': { left: 150, top: 12 }
+		'desktop-icon-documents': { left: 150, top: 12 },
+		'desktop-icon-email': { left: 280, top: 12 }
 	};
 
 	var icons = Array.prototype.slice.call(document.querySelectorAll('.desktop-app-icon'));

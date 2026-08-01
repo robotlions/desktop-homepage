@@ -2,6 +2,7 @@
 @page "/draggable-desktop"
 @layout DesktopLayout
 @inject IJSRuntime JS
+@inject NavigationManager Nav
 
 <PageTitle>chadmusick.com</PageTitle>
 
@@ -86,6 +87,11 @@
 		<div id="desktop-icon-games" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)gamesLeft)px; top:@((int)gamesTop)px;" @onclick="OpenGames">
 			<img src="icons/PROGM028.PNG" alt="Games" width="64" height="64">
 			<span class="desktop-app-icon-label">Productivity</span>
+		</div>
+
+		<div id="desktop-icon-email" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)emailLeft)px; top:@((int)emailTop)px;" @onclick="OpenEmail">
+			<img src="icons/PROGM035.PNG" alt="Electronic Mail" width="64" height="64">
+			<span class="desktop-app-icon-label">Electronic Mail</span>
 		</div>
 
 		<div id="launcher-window" class="launcher-window draggable-window @(launcherOpen ? string.Empty : "window-hidden")">
@@ -308,6 +314,8 @@
 	private bool gamesOpen = false;
 	private double gamesLeft = 150.0;
 	private double gamesTop = 312.0;
+	private double emailLeft = 280.0;
+	private double emailTop = 12.0;
 
 	private const string GoldenAxeUrl = "/games/axe.jsdos";
 	private const string PoolOfRadianceUrl = "/games/POOLRAD.jsdos";
@@ -415,6 +423,11 @@
 		await BringWindowToFront("games-window");
 	}
 
+	private void OpenEmail()
+	{
+		Nav.NavigateTo("mailto:chad@chadmusick.com");
+	}
+
 	private async Task OnGamesKeyDown(KeyboardEventArgs e, string gameUrl)
 	{
 		if (e.Key == "Enter" || e.Key == " ")
@@ -472,6 +485,10 @@
 			case "desktop-icon-games":
 				gamesLeft = left;
 				gamesTop = top;
+				break;
+			case "desktop-icon-email":
+				emailLeft = left;
+				emailTop = top;
 				break;
 		}
 		StateHasChanged();
