@@ -1020,3 +1020,45 @@
 		font-size: 13px;
 	}
 }
+
+@media (max-width: 1024px) and (orientation: landscape) {
+	.launcher-window,
+	.notepad-window,
+	.photography-window,
+	.websites-window,
+	.documents-window,
+	.dosbox-window,
+	.games-window {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.desktop-area {
+		display: flex;
+		align-content: flex-start;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		gap: 4px;
+		padding: 8px;
+	}
+
+	.desktop-app-icon {
+		position: relative;
+		left: auto !important;
+		top: auto !important;
+		width: 92px;
+		margin: 0;
+		flex: 0 0 92px;
+	}
+
+	.desktop-app-icon img,
+	.desktop-app-icon svg {
+		width: 48px;
+		height: 48px;
+	}
+
+	.desktop-app-icon-label {
+		font-size: 15px;
+	}
+}
