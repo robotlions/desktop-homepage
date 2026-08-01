@@ -1,6 +1,6 @@
 .desktop-menubar {
-	background: #c0c0c0;
-	border-bottom: 1px solid #000000;
+	background: #000080;
+	border-bottom: 1px solid #808080;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -8,9 +8,22 @@
 	position: relative;
 	z-index: 50;
 	gap: 0;
-	padding: 0 4px 0 25px;
+	padding: 0 4px;
 	font-family: 'VT323', monospace;
 	font-size: 22px;
+	color: #fff;
+	flex: 0 0 auto;
+}
+
+.menu-bar-path {
+	flex: 1;
+	text-align: center;
+	color: #fff;
+	user-select: none;
+	cursor: default;
+	font-family: 'VT323', monospace;
+	font-size: 22px;
+	line-height: 1;
 }
 
 .menu-apple {
@@ -51,6 +64,10 @@
 		font-size: 18px;
 	}
 
+	.menu-bar-path {
+		font-size: 18px;
+	}
+
 	.menu-link {
 		font-size: 18px;
 		padding: 0 8px;
@@ -64,6 +81,10 @@
 
 @media (max-width: 480px) {
 	.desktop-menubar {
+		font-size: 15px;
+	}
+
+	.menu-bar-path {
 		font-size: 15px;
 	}
 
@@ -188,11 +209,13 @@
 }
 
 .desktop-area {
-	min-height: 320px;
+	flex: 1 1 auto;
+	min-height: 0;
 	background: #008080;
 	position: relative;
-	height: calc(100vh - 35px);
 	overflow: hidden;
+	border: 1px solid #000000;
+	box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
 }
 
 .text-file {

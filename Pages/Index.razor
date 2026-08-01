@@ -5,24 +5,24 @@
 
 <PageTitle>chadmusick.com</PageTitle>
 
-<div class="row">
-	<div class="desktop-menubar">
-		<span class="menu-apple">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 26" width="18" height="20">
-				<rect x="0" y="0" width="24" height="18" rx="2" fill="#111" />
-				<rect x="2" y="2" width="20" height="13" fill="#fff" />
-				<rect x="9" y="18" width="6" height="4" fill="#111" />
-				<rect x="3" y="22" width="18" height="3" rx="1" fill="#111" />
-			</svg>
-		</span>
-		<button type="button" class="menu-link menu-link-button" @onclick="OpenLauncher">Applications</button>
-		<button type="button" class="menu-link menu-link-button" @onclick="OpenDocuments">Documents</button>
-		<button type="button" class="menu-link menu-link-button" @onclick="OpenWebsites">World Wide Websites</button>
-		<button type="button" class="menu-link menu-link-button" @onclick="OpenPhotography">Photography</button>
-	</div>
+<div class="desktop-menubar">
+	<span class="menu-bar-path">C:\PROGRAMS\HOME.EXE</span>
+	@* Commented out - original menu bar layout, kept for later use.
+	<span class="menu-apple">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 26" width="18" height="20">
+			<rect x="0" y="0" width="24" height="18" rx="2" fill="#111" />
+			<rect x="2" y="2" width="20" height="13" fill="#fff" />
+			<rect x="9" y="18" width="6" height="4" fill="#111" />
+			<rect x="3" y="22" width="18" height="3" rx="1" fill="#111" />
+		</svg>
+	</span>
+	<button type="button" class="menu-link menu-link-button" @onclick="OpenLauncher">Applications</button>
+	<button type="button" class="menu-link menu-link-button" @onclick="OpenDocuments">Documents</button>
+	<button type="button" class="menu-link menu-link-button" @onclick="OpenWebsites">World Wide Websites</button>
+	<button type="button" class="menu-link menu-link-button" @onclick="OpenPhotography">Photography</button>
+	*@
 </div>
-<div class="row">
-	<div id="desktop-area" class="desktop-area col-12">
+<div id="desktop-area" class="desktop-area">
 
 		@if (textFileVisible)
 		{
@@ -276,7 +276,6 @@
 				</div>
 			</div>
 		}
-	</div>
 </div>
 
 @implements IAsyncDisposable
