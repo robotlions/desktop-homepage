@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - File Not Found | chadmusick.com</title>
+    <link rel="canonical" href="https://chadmusick.com/" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            background: #008080;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'VT323', 'Courier New', monospace;
+        }
+        .error-window {
+            width: min(380px, 90vw);
+            padding: 3px;
+            background: #c0c0c0;
+            border: 2px solid #000;
+            box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 6px 6px 0 rgba(0, 0, 0, 0.55);
+        }
+        .error-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 6px;
+            background: #000080;
+            color: #ffffff;
+            font-size: 20px;
+            letter-spacing: 1px;
+            user-select: none;
+        }
+        .error-titlebar-close {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            line-height: 20px;
+            text-align: center;
+            background: #c0c0c0;
+            color: #000;
+            font-size: 18px;
+            border: 1px solid #000;
+            box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+        }
+        .error-body {
+            padding: 18px 16px;
+            text-align: center;
+            font-size: 26px;
+            color: #000;
+            letter-spacing: 1px;
+        }
+        .error-code {
+            font-size: 46px;
+            color: #000080;
+            margin-bottom: 8px;
+        }
+        .error-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 18px;
+            background: #c0c0c0;
+            color: #000;
+            text-decoration: none;
+            border: 1px solid #000;
+            box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+        .error-link:hover {
+            background: #d4d4d4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-window" role="alert">
+        <div class="error-titlebar">
+            <span>File Not Found</span>
+            <span class="error-titlebar-close">×</span>
+        </div>
+        <div class="error-body">
+            <div class="error-code">ERROR 404</div>
+            <div>The file or page you are looking for does not exist.</div>
+            <a class="error-link" href="/">OK</a>
+        </div>
+    </div>
+</body>
+
+</html>

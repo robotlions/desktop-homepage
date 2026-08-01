@@ -1,0 +1,22 @@
+{
+  "name": "chadmusick.com",
+  "short_name": "chadmusick",
+  "description": "Windows 3.1-style desktop with apps, websites, photography, and classic DOS games.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#008080",
+  "theme_color": "#008080",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
