@@ -272,6 +272,16 @@ export async function startDosbox(gameUrl) {
 	}
 }
 
+export async function stopDosbox() {
+	if (!_dosboxBooted) return;
+	try { await _dosbox.stop(); } catch (e) { }
+	var container = document.getElementById('dosbox-container');
+	if (container) container.innerHTML = '';
+	_dosbox = null;
+	_dosboxBooted = false;
+	_dosboxUrl = null;
+}
+
 export async function submitContactForm(data) {
 	try {
 		var resp = await fetch('https://formsubmit.co/ajax/info@robotlions.com', {

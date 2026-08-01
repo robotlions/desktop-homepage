@@ -183,6 +183,12 @@
 					</span>
 					<span class="launcher-label">Quest for Glory</span>
 				</div>
+				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(BardsTaleUrl)" @onkeydown="(e) => OnGamesKeyDown(e, BardsTaleUrl)">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/WINSE001.PNG" alt="The Bard's Tale" width="64" height="64">
+					</span>
+					<span class="launcher-label">The Bard's Tale</span>
+				</div>
 			</div>
 		</div>
 
@@ -226,7 +232,7 @@
 						</button>
 					</div>
 					<div class="readme-modal-body">
-						<div>Hey there! I'm a front end web developer specializing in Javascript and React, although this site was written in Blazor. These are my mobile apps and websites, except for the stuff under Productivity, which were the inspirations for a lot of my work. Have fun looking around!</div>
+						<div>I'm a front-end web developer specializing in Javascript and React, although this site was written in Blazor. These are my mobile apps and websites, except for the stuff under Productivity, which were the inspirations for a lot of my work. Thank you for visiting!</div>
 					</div>
 				</div>
 			</div>
@@ -268,6 +274,7 @@
 	private const string PoolOfRadianceUrl = "/games/POOLRAD.jsdos";
 	private const string CivilizationUrl = "/games/CIV.jsdos";
 	private const string QuestForGloryUrl = "/games/HERO.jsdos";
+	private const string BardsTaleUrl = "/games/BARD.jsdos";
 	private string DosboxGameUrl = "";
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -337,7 +344,11 @@
 		await BringWindowToFront("websites-window");
 	}
 
-	private void CloseDosbox() => dosboxOpen = false;
+	private async Task CloseDosbox()
+	{
+		dosboxOpen = false;
+		await StopDosbox();
+	}
 
 	private async Task OpenDosbox(string gameUrl)
 	{
@@ -347,7 +358,20 @@
 		await BringWindowToFront("dosbox-window");
 	}
 
-	private void CloseGames() => gamesOpen = false;
+	private async Task CloseGames()
+	{
+		gamesOpen = false;
+		dosboxOpen = false;
+		await StopDosbox();
+	}
+
+	private async Task StopDosbox()
+	{
+		if (_jsModule != null)
+		{
+			try { await _jsModule.InvokeVoidAsync("stopDosbox"); } catch { }
+		}
+	}
 
 	private async Task OpenGames()
 	{
