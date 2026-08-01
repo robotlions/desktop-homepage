@@ -1,150 +1,19 @@
-var _isDraggingTrash = false;
-var _textFileDrag = {};
 var _appIconDrag = {};
 var _desktopWindowDrag = { bindings: [] };
 var _launcherIconBound = new WeakSet();
 var _windowFocusBound = new WeakSet();
 var _topZ = 40;
 
-export function registerTextFileDrag(dotNetRef) {
-	unregisterTextFileDrag();
-
-	var _textFileDeletedByTrash = false;
-
-	var textFile = document.getElementById('text-file');
-	var desktopEl = document.getElementById('desktop-area');
-	var textFileHandlers = null;
-
-	if (textFile) {
-		var offsetX = 0, offsetY = 0;
-
-		var onDragStart = function (e) {
-			if (e.dataTransfer) e.dataTransfer.setData('text/plain', 'text-file');
-			textFile.classList.add('dragging');
-			_textFileDeletedByTrash = false;
-			var rect = textFile.getBoundingClientRect();
-			offsetX = e.clientX - rect.left;
-			offsetY = e.clientY - rect.top;
-		};
-		var onDragEnd = function (e) {
-			textFile.classList.remove('dragging');
-			if (_textFileDeletedByTrash) return;
-			var dr = desktopEl ? desktopEl.getBoundingClientRect() : null;
-			var inside = dr && e.clientX >= dr.left && e.clientX <= dr.right && e.clientY >= dr.top && e.clientY <= dr.bottom;
-			if (inside) {
-				var newLeft = Math.max(0, Math.min(e.clientX - dr.left - offsetX, dr.width - textFile.offsetWidth));
-				var newTop = Math.max(0, Math.min(e.clientY - dr.top - offsetY, dr.height - textFile.offsetHeight));
-				textFile.style.left = newLeft + 'px';
-				textFile.style.top = newTop + 'px';
-				try { dotNetRef.invokeMethodAsync('OnTextFileMoved', newLeft, newTop).catch(function () { }); } catch (e2) { }
-			} else {
-				textFile.style.left = '150px';
-				textFile.style.top = '162px';
-				try { dotNetRef.invokeMethodAsync('OnTextFileMoved', 150, 162).catch(function () { }); } catch (e2) { }
-			}
-		};
-
-		try { textFile.removeEventListener('dragstart', onDragStart); } catch (e) { }
-		try { textFile.removeEventListener('dragend', onDragEnd); } catch (e) { }
-		textFile.addEventListener('dragstart', onDragStart);
-		textFile.addEventListener('dragend', onDragEnd);
-
-		textFileHandlers = { el: textFile, onDragStart: onDragStart, onDragEnd: onDragEnd };
-	}
-
-	// desktop-area is the single valid drop zone
-	var hotspots = [];
-	var desktopDropEl = document.getElementById('desktop-area');
-	if (desktopDropEl) {
-		var onDesktopDragOver = function (ev) { ev.preventDefault(); if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move'; };
-		var onDesktopDrop = function (ev) { ev.preventDefault(); };
-		desktopDropEl.addEventListener('dragover', onDesktopDragOver);
-		desktopDropEl.addEventListener('drop', onDesktopDrop);
-		hotspots.push({ el: desktopDropEl, onDragOver: onDesktopDragOver, onDrop: onDesktopDrop });
-	}
-
-	// register trash container as a drop target and drag source
-	var trash = document.getElementById('trash-container');
-	var trashDragHandlers = null;
-	if (trash) {
-		var onTrashDragOver = function (ev) { if (_isDraggingTrash) return; ev.preventDefault(); if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move'; this.classList.add('over'); };
-		var onTrashLeave = function (ev) { this.classList.remove('over'); };
-		var onTrashDrop = function (ev) {
-			if (_isDraggingTrash) return;
-			ev.preventDefault();
-			this.classList.remove('over');
-			var dragType = ev.dataTransfer ? ev.dataTransfer.getData('text/plain') : '';
-			if (dragType === 'text-file') {
-				_textFileDeletedByTrash = true;
-				try { dotNetRef.invokeMethodAsync('OnTextFileDeleted').catch(function () { }); } catch (e) { }
-			}
-		};
-
-		trash.addEventListener('dragover', onTrashDragOver);
-		trash.addEventListener('dragleave', onTrashLeave);
-		trash.addEventListener('drop', onTrashDrop);
-		hotspots.push({ el: trash, onDragOver: onTrashDragOver, onDragLeave: onTrashLeave, onDrop: onTrashDrop });
-
-		// trash as drag source — repositions it within the desktop
-		var trashOffsetX = 0, trashOffsetY = 0;
-		var onTrashDragStart = function (e) {
-			_isDraggingTrash = true;
-			trash.classList.add('dragging');
-			var rect = trash.getBoundingClientRect();
-			trashOffsetX = e.clientX - rect.left;
-			trashOffsetY = e.clientY - rect.top;
-			if (e.dataTransfer) { e.dataTransfer.setData('text/plain', 'trash'); e.dataTransfer.effectAllowed = 'move'; }
-		};
-		var onTrashDragEnd = function (e) {
-			_isDraggingTrash = false;
-			trash.classList.remove('dragging');
-			if (desktopEl && e.clientX !== 0 && e.clientY !== 0) {
-				var dr = desktopEl.getBoundingClientRect();
-				var newLeft = Math.max(0, Math.min(e.clientX - dr.left - trashOffsetX, dr.width - trash.offsetWidth));
-				var newTop = Math.max(0, Math.min(e.clientY - dr.top - trashOffsetY, dr.height - trash.offsetHeight));
-				trash.style.right = 'auto';
-				trash.style.bottom = 'auto';
-				trash.style.left = newLeft + 'px';
-				trash.style.top = newTop + 'px';
-			}
-		};
-		trash.setAttribute('draggable', 'true');
-		trash.addEventListener('dragstart', onTrashDragStart);
-		trash.addEventListener('dragend', onTrashDragEnd);
-		trashDragHandlers = { el: trash, onDragStart: onTrashDragStart, onDragEnd: onTrashDragEnd };
-	}
-
-	_textFileDrag = { textFileHandlers: textFileHandlers, hotspots: hotspots, dotNetRef: dotNetRef, trashDragHandlers: trashDragHandlers };
-}
-
-export function unregisterTextFileDrag() {
-	var state = _textFileDrag;
-	if (!state) return;
-	try {
-		if (state.textFileHandlers) {
-			try { if (state.textFileHandlers.el) state.textFileHandlers.el.removeEventListener('dragstart', state.textFileHandlers.onDragStart); } catch (e) { }
-			try { if (state.textFileHandlers.el) state.textFileHandlers.el.removeEventListener('dragend', state.textFileHandlers.onDragEnd); } catch (e) { }
-		}
-		if (state.hotspots) {
-			state.hotspots.forEach(function (h) {
-				try { h.el.removeEventListener('dragover', h.onDragOver); } catch (e) { }
-				try { if (h.onDragLeave) h.el.removeEventListener('dragleave', h.onDragLeave); } catch (e) { }
-				try { h.el.removeEventListener('drop', h.onDrop); } catch (e) { }
-			});
-		}
-		if (state.trashDragHandlers) {
-			try { state.trashDragHandlers.el.removeEventListener('dragstart', state.trashDragHandlers.onDragStart); } catch (e) { }
-			try { state.trashDragHandlers.el.removeEventListener('dragend', state.trashDragHandlers.onDragEnd); } catch (e) { }
-		}
-	} catch (e) { }
-	_textFileDrag = {};
-}
-
 export function registerAppIconDrag(dotNetRef) {
 	unregisterAppIconDrag();
 
 	var desktopEl = document.getElementById('desktop-area');
 	if (!desktopEl) return;
+
+	var onDesktopDragOver = function (ev) { ev.preventDefault(); if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move'; };
+	var onDesktopDrop = function (ev) { ev.preventDefault(); };
+	desktopEl.addEventListener('dragover', onDesktopDragOver);
+	desktopEl.addEventListener('drop', onDesktopDrop);
 
 	var defaults = {
 		'desktop-icon-applications': { left: 20, top: 12 },
@@ -191,19 +60,23 @@ export function registerAppIconDrag(dotNetRef) {
 		bindings.push({ el: icon, onDragStart: onDragStart, onDragEnd: onDragEnd });
 	});
 
-	_appIconDrag = { bindings: bindings };
+	_appIconDrag = { bindings: bindings, desktopEl: desktopEl, onDragOver: onDesktopDragOver, onDrop: onDesktopDrop };
 }
 
 export function unregisterAppIconDrag() {
 	var state = _appIconDrag;
-	if (!state || !state.bindings) {
+	if (!state) {
 		_appIconDrag = {};
 		return;
 	}
-	state.bindings.forEach(function (b) {
-		try { b.el.removeEventListener('dragstart', b.onDragStart); } catch (e) { }
-		try { b.el.removeEventListener('dragend', b.onDragEnd); } catch (e) { }
-	});
+	if (state.bindings) {
+		state.bindings.forEach(function (b) {
+			try { b.el.removeEventListener('dragstart', b.onDragStart); } catch (e) { }
+			try { b.el.removeEventListener('dragend', b.onDragEnd); } catch (e) { }
+		});
+	}
+	try { if (state.desktopEl) state.desktopEl.removeEventListener('dragover', state.onDragOver); } catch (e) { }
+	try { if (state.desktopEl) state.desktopEl.removeEventListener('drop', state.onDrop); } catch (e) { }
 	_appIconDrag = {};
 }
 
@@ -276,7 +149,6 @@ export function registerDesktopWindowDrag() {
 	}
 
 	bindWindow('launcher-window', 'launcher-titlebar');
-	bindWindow('notepad-window', 'notepad-titlebar');
 	bindWindow('photography-window', 'photography-titlebar');
 	bindWindow('websites-window', 'websites-titlebar');
 	bindWindow('documents-window', 'documents-titlebar');

@@ -26,39 +26,6 @@
 	line-height: 1;
 }
 
-.menu-apple {
-	padding: 0 20px 0 0;
-	font-size: 20px;
-	line-height: 1;
-	user-select: none;
-	cursor: default;
-	flex-shrink: 0;
-}
-
-.menu-link {
-	display: flex;
-	align-items: center;
-	padding: 0 12px;
-	height: 34px;
-	color: #000;
-	text-decoration: none;
-	white-space: nowrap;
-	font-family: 'VT323', monospace;
-	font-size: 22px;
-	user-select: none;
-}
-
-.menu-link-button {
-	background: transparent;
-	border: 0;
-	cursor: pointer;
-}
-
-	.menu-link:hover {
-		background: #000080;
-		color: #ffffff;
-	}
-
 @media (max-width: 1024px) {
 	.desktop-menubar {
 		font-size: 18px;
@@ -66,16 +33,6 @@
 
 	.menu-bar-path {
 		font-size: 18px;
-	}
-
-	.menu-link {
-		font-size: 18px;
-		padding: 0 8px;
-		height: 30px;
-	}
-
-	.menu-apple {
-		padding: 0 8px;
 	}
 }
 
@@ -87,126 +44,6 @@
 	.menu-bar-path {
 		font-size: 15px;
 	}
-
-	.menu-link {
-		font-size: 15px;
-		padding: 0 5px;
-		height: 26px;
-	}
-
-	.menu-apple {
-		padding: 0 5px;
-		font-size: 14px;
-	}
-}
-
-.notepad-overlay {
-	display: none;
-}
-
-.notepad-window {
-	position: absolute;
-	top: 26%;
-	left: 34%;
-	transform: translateX(-50%);
-	width: 520px;
-	height: 380px;
-	background: #c0c0c0;
-	border: 2px solid #000000;
-	box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 6px 6px 0 rgba(0, 0, 0, 0.55);
-	padding: 3px;
-	display: flex;
-	flex-direction: column;
-	font-family: 'VT323', monospace;
-	z-index: 40;
-}
-
-.notepad-titlebar {
-	position: relative;
-	background: #000080;
-	color: #fff;
-	padding: 3px 8px;
-	font-family: 'VT323', monospace;
-	font-size: 20px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	user-select: none;
-	border-top: 1px solid #808080;
-	letter-spacing: 1px;
-}
-
-	.notepad-titlebar span {
-		flex: 1;
-		text-align: center;
-	}
-
-.notepad-close {
-	position: absolute;
-	right: 4px;
-	top: 3px;
-	background: #c0c0c0;
-	border: 1px solid #000000;
-	box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
-	color: #000;
-	width: 22px;
-	height: 20px;
-	font-size: 14px;
-	line-height: 1;
-	cursor: pointer;
-	padding: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-family: 'VT323', monospace;
-}
-
-	.notepad-close:hover,
-	.notepad-close:focus-visible {
-		background: #000000;
-		color: #ffffff;
-		outline: none;
-	}
-
-.notepad-body {
-	flex: 1;
-	position: relative;
-	display: flex;
-	margin: 4px;
-}
-
-.notepad-content {
-	flex: 1;
-	border: 1px solid #000000;
-	margin: 0;
-	resize: none;
-	padding: 4px;
-	font-family: 'VT323', monospace;
-	font-size: 22px;
-	outline: none;
-	background: #fff;
-	caret-color: #000;
-}
-
-.notepad-cursor {
-	position: absolute;
-	left: 7px;
-	top: 7px;
-	width: 11px;
-	height: 22px;
-	background: #000;
-	pointer-events: none;
-	animation: notepad-cursor-blink 1s steps(1) infinite;
-}
-
-.notepad-window:focus-within .notepad-cursor {
-	display: none;
-}
-
-@keyframes notepad-cursor-blink {
-	50% {
-		opacity: 0;
-	}
 }
 
 .desktop-area {
@@ -217,59 +54,6 @@
 	overflow: hidden;
 	border: 1px solid #000000;
 	box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
-}
-
-.text-file {
-	user-select: none;
-	cursor: grab;
-	filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.15));
-	line-height: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.text-file img {
-	display: block;
-	margin-bottom: 4px;
-	image-rendering: pixelated;
-}
-
-.text-file.dragging {
-	opacity: 0.6;
-}
-
-.trash.dragging {
-	opacity: 0.6;
-}
-
-.status {
-	position: absolute;
-	bottom: 130px;
-	left: 12px;
-	z-index: 10;
-	font-family: "Courier New", monospace;
-	background: rgba(255, 255, 255, 0.7);
-	padding: 4px 8px;
-}
-
-.trash.clickable {
-	cursor: pointer;
-}
-
-/* Trash container */
-.trash {
-	position: absolute;
-	right: 48px;
-	bottom: 72px;
-	cursor: default;
-	filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.3));
-	transition: filter 0.15s;
-	line-height: 0;
-}
-
-.trash.over {
-	filter: drop-shadow(0 0 10px rgba(220, 0, 0, 0.75));
 }
 
 .desktop-app-icon {
@@ -288,13 +72,6 @@
 .desktop-app-icon.dragging {
 	opacity: 0.6;
 }
-
-	.desktop-app-icon svg {
-		width: 64px;
-		height: 64px;
-		display: block;
-		margin-bottom: 4px;
-	}
 
 	.desktop-app-icon img {
 		width: 64px;
@@ -438,12 +215,6 @@
 	margin-bottom: 6px;
 }
 
-.launcher-icon svg {
-	width: 64px;
-	height: 64px;
-	display: block;
-}
-
 .launcher-icon img {
 	width: 64px;
 	height: 64px;
@@ -454,11 +225,6 @@
 .launcher-label {
 	font-size: 22px;
 	line-height: 1.1;
-}
-
-.launcher-link:hover .launcher-icon svg,
-.launcher-link:focus-visible .launcher-icon svg {
-	filter: none;
 }
 
 .photography-window {
@@ -1134,7 +900,6 @@
 
 @media (max-width: 768px) {
 	.launcher-window,
-	.notepad-window,
 	.photography-window,
 	.websites-window,
 	.documents-window,
@@ -1154,11 +919,6 @@
 		width: 92px;
 	}
 
-		.desktop-app-icon svg {
-			width: 48px;
-			height: 48px;
-		}
-
 	.desktop-app-icon-label {
 		font-size: 15px;
 	}
@@ -1166,7 +926,6 @@
 
 @media (max-width: 480px) {
 	.launcher-window,
-	.notepad-window,
 	.photography-window,
 	.websites-window,
 	.documents-window,
@@ -1183,11 +942,6 @@
 		width: 82px;
 	}
 
-		.desktop-app-icon svg {
-			width: 40px;
-			height: 40px;
-		}
-
 	.desktop-app-icon-label {
 		font-size: 13px;
 	}
@@ -1195,7 +949,6 @@
 
 @media (max-width: 1024px) and (orientation: landscape) {
 	.launcher-window,
-	.notepad-window,
 	.photography-window,
 	.websites-window,
 	.documents-window,
@@ -1225,8 +978,7 @@
 		flex: 0 0 92px;
 	}
 
-	.desktop-app-icon img,
-	.desktop-app-icon svg {
+	.desktop-app-icon img {
 		width: 48px;
 		height: 48px;
 	}
