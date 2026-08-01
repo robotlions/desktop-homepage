@@ -231,17 +231,29 @@
 				</button>
 			</div>
 			<div class="games-content">
-				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(GoldenAxeUrl)" @onkeydown="(e) => OnGamesKeyDown(e, GoldenAxeUrl)">
-					<span class="launcher-icon" aria-hidden="true">
-						<img src="icons/WINSE001.PNG" alt="Golden Axe" width="64" height="64">
-					</span>
-					<span class="launcher-label">Golden Axe</span>
-				</div>
 				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(PoolOfRadianceUrl)" @onkeydown="(e) => OnGamesKeyDown(e, PoolOfRadianceUrl)">
 					<span class="launcher-icon" aria-hidden="true">
 						<img src="icons/WINSE001.PNG" alt="Pool of Radiance" width="64" height="64">
 					</span>
 					<span class="launcher-label">Pool of Radiance</span>
+				</div>
+				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(CivilizationUrl)" @onkeydown="(e) => OnGamesKeyDown(e, CivilizationUrl)">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/WINSE001.PNG" alt="Civilization" width="64" height="64">
+					</span>
+					<span class="launcher-label">Civilization</span>
+				</div>
+				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(QuestForGloryUrl)" @onkeydown="(e) => OnGamesKeyDown(e, QuestForGloryUrl)">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/WINSE001.PNG" alt="Quest for Glory" width="64" height="64">
+					</span>
+					<span class="launcher-label">Quest for Glory</span>
+				</div>
+				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(GoldenAxeUrl)" @onkeydown="(e) => OnGamesKeyDown(e, GoldenAxeUrl)">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/WINSE001.PNG" alt="Golden Axe" width="64" height="64">
+					</span>
+					<span class="launcher-label">Golden Axe</span>
 				</div>
 			</div>
 		</div>
@@ -300,6 +312,8 @@
 
 	private const string GoldenAxeUrl = "/games/axe.jsdos";
 	private const string PoolOfRadianceUrl = "/games/POOLRAD.jsdos";
+	private const string CivilizationUrl = "/games/CIV.jsdos";
+	private const string QuestForGloryUrl = "/games/HERO.jsdos";
 	private string DosboxGameUrl = "";
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
