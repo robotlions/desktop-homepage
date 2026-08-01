@@ -25,15 +25,6 @@
 </div>
 <div id="desktop-area" class="desktop-area">
 
-		@if (textFileVisible)
-		{
-			<div id="text-file" class="text-file" draggable="true" @onclick="OpenNotepad"
-				 style="position:absolute; left:@((int)textFileLeft)px; top:@((int)textFileTop)px; z-index:10;">
-				<img src="icons/PROGM029.PNG" alt="Notepad" width="64" height="64">
-				<span class="desktop-app-icon-label">Notepad</span>
-			</div>
-		}
-
 		<div id="trash-container"
 			 class="trash @(!textFileVisible ? "clickable" : "")"
 			 @onclick="ResetAll">
@@ -255,12 +246,6 @@
 					</span>
 					<span class="launcher-label">Quest for Glory</span>
 				</div>
-				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(GoldenAxeUrl)" @onkeydown="(e) => OnGamesKeyDown(e, GoldenAxeUrl)">
-					<span class="launcher-icon" aria-hidden="true">
-						<img src="icons/WINSE001.PNG" alt="Golden Axe" width="64" height="64">
-					</span>
-					<span class="launcher-label">Golden Axe</span>
-				</div>
 			</div>
 		</div>
 
@@ -282,7 +267,7 @@
 				<textarea id="contact-message" class="contact-textarea" @bind="contactMessage" @bind:event="oninput"></textarea>
 				<div class="contact-actions">
 					<button type="button" class="contact-send" @onclick="SendContact" disabled="@contactSending">SEND</button>
-					<a class="contact-mailto" href="mailto:chad@chadmusick.com">or email directly</a>
+					<a class="contact-mailto" href="mailto:info@robotlions.com">or email directly</a>
 				</div>
 				@if (!string.IsNullOrEmpty(contactStatus))
 				{
@@ -341,8 +326,8 @@
 	private bool gamesOpen = false;
 	private double gamesLeft = 150.0;
 	private double gamesTop = 312.0;
-	private double emailLeft = 280.0;
-	private double emailTop = 12.0;
+	private double emailLeft = 150.0;
+	private double emailTop = 162.0;
 	private bool contactOpen = false;
 	private double contactLeft = 430.0;
 	private double contactTop = 100.0;
@@ -352,7 +337,6 @@
 	private string contactStatus = "";
 	private bool contactSending = false;
 
-	private const string GoldenAxeUrl = "/games/axe.jsdos";
 	private const string PoolOfRadianceUrl = "/games/POOLRAD.jsdos";
 	private const string CivilizationUrl = "/games/CIV.jsdos";
 	private const string QuestForGloryUrl = "/games/HERO.jsdos";
@@ -460,7 +444,7 @@
 
 	private void OpenEmail()
 	{
-		Nav.NavigateTo("mailto:chad@chadmusick.com");
+		Nav.NavigateTo("mailto:info@robotlions.com");
 	}
 
 	private void CloseContact() => contactOpen = false;
@@ -486,14 +470,14 @@
 		{
 			if (_jsModule != null)
 			{
-				var ok = await _jsModule.InvokeAsync<bool>("submitContactForm", new
+				var result = await _jsModule.InvokeAsync<ContactSubmitResult>("submitContactForm", new
 				{
 					name = contactName,
 					email = contactEmail,
 					message = contactMessage
 				});
-				contactStatus = ok ? "MESSAGE SENT" : "SEND FAILED - TRY AGAIN";
-				if (ok)
+				contactStatus = result.Ok ? "MESSAGE SENT" : result.Message;
+				if (result.Ok)
 				{
 					contactName = "";
 					contactEmail = "";
@@ -506,6 +490,12 @@
 			contactStatus = "SEND FAILED - TRY AGAIN";
 		}
 		contactSending = false;
+	}
+
+	private class ContactSubmitResult
+	{
+		public bool Ok { get; set; }
+		public string? Message { get; set; }
 	}
 
 	private async Task OnGamesKeyDown(KeyboardEventArgs e, string gameUrl)

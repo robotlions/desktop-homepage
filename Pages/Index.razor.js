@@ -151,7 +151,7 @@ export function registerAppIconDrag(dotNetRef) {
 		'desktop-icon-websites': { left: 20, top: 162 },
 		'desktop-icon-photography': { left: 20, top: 312 },
 		'desktop-icon-documents': { left: 150, top: 12 },
-		'desktop-icon-email': { left: 280, top: 12 }
+		'desktop-icon-email': { left: 150, top: 162 }
 	};
 
 	var icons = Array.prototype.slice.call(document.querySelectorAll('.desktop-app-icon'));
@@ -402,7 +402,7 @@ export async function startDosbox(gameUrl) {
 
 export async function submitContactForm(data) {
 	try {
-		var resp = await fetch('https://formsubmit.co/ajax/chad@chadmusick.com', {
+		var resp = await fetch('https://formsubmit.co/ajax/info@robotlions.com', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -412,13 +412,16 @@ export async function submitContactForm(data) {
 				name: data.name,
 				email: data.email,
 				message: data.message,
-				_subject: 'desktop-homepage contact message'
+				_subject: 'desktop-homepage contact message',
+				_captcha: 'false',
+				_template: 'table'
 			})
 		});
 		var json = await resp.json();
-		return json && json.success === 'true';
+		var ok = json && (json.success === 'true' || json.success === true);
+		return { ok: ok, message: json && json.message ? json.message : (ok ? '' : 'REQUEST FAILED') };
 	} catch (e) {
 		console.error('Contact form failed:', e);
-		return false;
+		return { ok: false, message: 'NETWORK ERROR' };
 	}
 }
