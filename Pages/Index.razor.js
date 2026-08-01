@@ -360,11 +360,19 @@ export function bringToFront(windowId) {
 
 var _dosbox = null;
 var _dosboxBooted = false;
+var _dosboxUrl = null;
 
-export function startDosbox(gameUrl) {
-	if (_dosboxBooted) return _dosbox;
+export async function startDosbox(gameUrl) {
 	var container = document.getElementById('dosbox-container');
 	if (!container) return null;
+	if (_dosboxBooted && _dosboxUrl === gameUrl) return _dosbox;
+	if (_dosboxBooted) {
+		try { await _dosbox.stop(); } catch (e) { }
+		container.innerHTML = '';
+		_dosbox = null;
+		_dosboxBooted = false;
+		_dosboxUrl = null;
+	}
 	var loading = document.getElementById('dosbox-loading');
 	if (loading) loading.remove();
 	if (typeof Dos === 'undefined') {
@@ -372,6 +380,7 @@ export function startDosbox(gameUrl) {
 		return null;
 	}
 	_dosboxBooted = true;
+	_dosboxUrl = gameUrl;
 	try {
 		var options = {
 			pathPrefix: 'https://cdn.jsdelivr.net/npm/emulators@8.4.1/dist/',
@@ -384,6 +393,7 @@ export function startDosbox(gameUrl) {
 		console.error('DOSBox failed to start:', e);
 		container.innerHTML = '<div class="dosbox-error">DOSBOX FAILED TO START</div>';
 		_dosboxBooted = false;
+		_dosboxUrl = null;
 		return null;
 	}
 }

@@ -85,7 +85,7 @@
 
 		<div id="desktop-icon-games" class="desktop-app-icon" role="button" draggable="true" style="left:@((int)gamesLeft)px; top:@((int)gamesTop)px;" @onclick="OpenGames">
 			<img src="icons/PROGM028.PNG" alt="Games" width="64" height="64">
-			<span class="desktop-app-icon-label">Games</span>
+			<span class="desktop-app-icon-label">Productivity</span>
 		</div>
 
 		<div id="launcher-window" class="launcher-window draggable-window @(launcherOpen ? string.Empty : "window-hidden")">
@@ -223,7 +223,7 @@
 
 		<div id="games-window" class="games-window draggable-window @(gamesOpen ? string.Empty : "window-hidden")">
 			<div id="games-titlebar" class="games-titlebar draggable-window-handle">
-				<span>GAMES</span>
+				<span>PRODUCTIVITY</span>
 				<button class="games-close" @onclick="CloseGames" aria-label="Close">
 					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
 						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
@@ -231,11 +231,17 @@
 				</button>
 			</div>
 			<div class="games-content">
-				<div class="games-link" role="button" tabindex="0" @onclick="OpenDosbox" @onkeydown="OnGamesKeyDown">
+				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(GoldenAxeUrl)" @onkeydown="(e) => OnGamesKeyDown(e, GoldenAxeUrl)">
 					<span class="launcher-icon" aria-hidden="true">
 						<img src="icons/WINSE001.PNG" alt="Golden Axe" width="64" height="64">
 					</span>
 					<span class="launcher-label">Golden Axe</span>
+				</div>
+				<div class="games-link" role="button" tabindex="0" @onclick="() => OpenDosbox(PoolOfRadianceUrl)" @onkeydown="(e) => OnGamesKeyDown(e, PoolOfRadianceUrl)">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/WINSE001.PNG" alt="Pool of Radiance" width="64" height="64">
+					</span>
+					<span class="launcher-label">Pool of Radiance</span>
 				</div>
 			</div>
 		</div>
@@ -292,7 +298,9 @@
 	private double gamesLeft = 150.0;
 	private double gamesTop = 312.0;
 
-	private const string DosboxGameUrl = "/games/axe.jsdos";
+	private const string GoldenAxeUrl = "/games/axe.jsdos";
+	private const string PoolOfRadianceUrl = "/games/POOLRAD.jsdos";
+	private string DosboxGameUrl = "";
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -378,8 +386,9 @@
 
 	private void CloseDosbox() => dosboxOpen = false;
 
-	private async Task OpenDosbox()
+	private async Task OpenDosbox(string gameUrl)
 	{
+		DosboxGameUrl = gameUrl;
 		dosboxOpen = true;
 		_pendingDosboxStart = true;
 		await BringWindowToFront("dosbox-window");
@@ -393,11 +402,11 @@
 		await BringWindowToFront("games-window");
 	}
 
-	private async Task OnGamesKeyDown(KeyboardEventArgs e)
+	private async Task OnGamesKeyDown(KeyboardEventArgs e, string gameUrl)
 	{
 		if (e.Key == "Enter" || e.Key == " ")
 		{
-			await OpenDosbox();
+			await OpenDosbox(gameUrl);
 		}
 	}
 
