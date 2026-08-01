@@ -40,6 +40,11 @@
 			<span class="desktop-app-icon-label">Electronic Mail</span>
 		</div>
 
+		<div id="desktop-icon-trash" class="desktop-app-icon desktop-trash-icon" role="button" draggable="true" @onclick="OpenTrash">
+			<img src="icons/MSMAI016.PNG" alt="Trash Can" width="64" height="64">
+			<span class="desktop-app-icon-label">Trash Can</span>
+		</div>
+
 		<div id="launcher-window" class="launcher-window draggable-window @(launcherOpen ? string.Empty : "window-hidden")">
 			<div id="launcher-titlebar" class="launcher-titlebar draggable-window-handle">
 				<span>APPLICATIONS</span>
@@ -219,6 +224,25 @@
 			</div>
 		</div>
 
+		<div id="trash-window" class="trash-window draggable-window @(trashOpen ? string.Empty : "window-hidden")">
+			<div id="trash-titlebar" class="trash-titlebar draggable-window-handle">
+				<span>TRASH CAN</span>
+				<button class="trash-close" @onclick="CloseTrash" aria-label="Close">
+					<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+						<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+					</svg>
+				</button>
+			</div>
+			<div class="trash-content">
+				<div class="trash-link" role="button" tabindex="0" draggable="true" @onclick="OpenSpoilers" @onkeydown="OnSpoilersKeyDown" data-tx="-40" data-ty="-30" style="transform: translate(-40px, -30px);">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/NOTEP001.PNG" alt="TOPSECRT.TXT" width="64" height="64">
+					</span>
+					<span class="launcher-label">TOPSECRT.TXT</span>
+				</div>
+			</div>
+		</div>
+
 		@if (readmeModalOpen)
 		{
 			<div class="readme-modal-overlay" @onclick="CloseReadme">
@@ -233,6 +257,28 @@
 					</div>
 					<div class="readme-modal-body">
 						<div>I'm a front-end web developer specializing in Javascript and React, although this site was written in Blazor. These are my mobile apps and websites, except for the stuff under Productivity, which were the inspirations for a lot of my work. Thank you for visiting!</div>
+					</div>
+				</div>
+			</div>
+		}
+
+		@if (spoilersModalOpen)
+		{
+			<div class="spoilers-modal-overlay" @onclick="CloseSpoilers">
+				<div class="spoilers-modal" role="dialog" aria-modal="true" aria-label="TOPSECRT.TXT" @onclick:stopPropagation>
+					<div class="spoilers-modal-titlebar">
+						<span>TOPSECRT.TXT</span>
+						<button class="spoilers-modal-close" @onclick="CloseSpoilers" aria-label="Close">
+							<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+								<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+							</svg>
+						</button>
+					</div>
+					<div class="spoilers-modal-body">
+						@foreach (var spoiler in MovieSpoilers)
+						{
+							<div class="spoiler-entry">@spoiler</div>
+						}
 					</div>
 				</div>
 			</div>
@@ -264,6 +310,8 @@
 	private double gamesTop = 312.0;
 	private double emailLeft = 150.0;
 	private double emailTop = 162.0;
+	private bool trashOpen = false;
+	private bool spoilersModalOpen = false;
 	private bool contactOpen = false;
 	private string contactName = "";
 	private string contactEmail = "";
@@ -276,6 +324,20 @@
 	private const string QuestForGloryUrl = "/games/HERO.jsdos";
 	private const string BardsTaleUrl = "/games/BARD.jsdos";
 	private string DosboxGameUrl = "";
+
+	private static readonly string[] MovieSpoilers = new[]
+	{
+		("- He's a ghost the entire time."),
+		("- Tyler is the narrator's alter ego."),
+		("- Darth is Luke's father."),
+		("- Leia is also his sister for some reason."),
+		("- Keyser Söze is Verbal Kint."),
+		("- Rosebud is the sled."),
+		("- The magician was twin brothers."),
+		("- The Wizard is just a man behind a curtain."),
+		("- The mysterious planet is Earth."),
+		("- Norman Bates is his own mother.")
+	};
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -380,6 +442,26 @@
 	}
 
 	private void CloseContact() => contactOpen = false;
+
+	private async Task OpenTrash()
+	{
+		trashOpen = true;
+		await BringWindowToFront("trash-window");
+	}
+
+	private void CloseTrash() => trashOpen = false;
+
+	private void OpenSpoilers() => spoilersModalOpen = true;
+
+	private void CloseSpoilers() => spoilersModalOpen = false;
+
+	private void OnSpoilersKeyDown(KeyboardEventArgs e)
+	{
+		if (e.Key == "Enter" || e.Key == " ")
+		{
+			OpenSpoilers();
+		}
+	}
 
 	private async Task OpenContact()
 	{

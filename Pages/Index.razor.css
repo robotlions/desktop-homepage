@@ -91,6 +91,13 @@
 	user-select: none;
 }
 
+.desktop-trash-icon {
+	right: 20px;
+	bottom: 12px;
+	left: auto;
+	top: auto;
+}
+
 .launcher-window {
 	position: absolute;
 	top: 16%;
@@ -461,6 +468,107 @@
 
 .documents-link:hover,
 .documents-link:focus-visible {
+	background: #000080;
+	color: #fff;
+	border-color: transparent;
+	outline: none;
+}
+
+.trash-window {
+	position: absolute;
+	top: 38%;
+	left: 24%;
+	transform: translateX(-50%);
+	width: 520px;
+	height: 380px;
+	background: #c0c0c0;
+	border: 2px solid #000000;
+	box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 6px 6px 0 rgba(0, 0, 0, 0.55);
+	padding: 3px;
+	z-index: 30;
+	font-family: 'VT323', monospace;
+	display: flex;
+	flex-direction: column;
+}
+
+.trash-titlebar {
+	position: relative;
+	background: #000080;
+	color: #fff;
+	padding: 3px 8px;
+	font-size: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-top: 1px solid #808080;
+	user-select: none;
+	letter-spacing: 1px;
+}
+
+	.trash-titlebar span {
+		flex: 1;
+		text-align: center;
+	}
+
+.trash-close {
+	position: absolute;
+	right: 4px;
+	top: 3px;
+	background: #c0c0c0;
+	border: 1px solid #000;
+	box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+	color: #000;
+	width: 22px;
+	height: 20px;
+	font-size: 14px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: 'VT323', monospace;
+}
+
+.trash-close:hover,
+.trash-close:focus-visible {
+	background: #000;
+	color: #fff;
+	outline: none;
+}
+
+.trash-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px;
+	margin: 4px;
+	background: #fff;
+	border: 1px solid #000000;
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+}
+
+.trash-link {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	color: #000;
+	border: 1px solid transparent;
+	padding: 4px;
+	cursor: grab;
+	user-select: none;
+}
+
+.trash-link.dragging {
+	opacity: 0.6;
+}
+
+.trash-link:hover,
+.trash-link:focus-visible {
 	background: #000080;
 	color: #fff;
 	border-color: transparent;
@@ -898,6 +1006,99 @@
 	user-select: text;
 }
 
+.spoilers-modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.4);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+	font-family: 'VT323', monospace;
+}
+
+.spoilers-modal {
+	width: 520px;
+	max-width: 92vw;
+	background: #c0c0c0;
+	border: 2px solid #000000;
+	box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 6px 6px 0 rgba(0, 0, 0, 0.55);
+	padding: 3px;
+	display: flex;
+	flex-direction: column;
+}
+
+.spoilers-modal-titlebar {
+	position: relative;
+	background: #000080;
+	color: #fff;
+	padding: 3px 8px;
+	font-size: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-top: 1px solid #808080;
+	user-select: none;
+	letter-spacing: 1px;
+}
+
+	.spoilers-modal-titlebar span {
+		flex: 1;
+		text-align: center;
+	}
+
+.spoilers-modal-close {
+	position: absolute;
+	right: 4px;
+	top: 3px;
+	background: #c0c0c0;
+	border: 1px solid #000;
+	box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+	color: #000;
+	width: 22px;
+	height: 20px;
+	font-size: 14px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: 'VT323', monospace;
+}
+
+.spoilers-modal-close:hover,
+.spoilers-modal-close:focus-visible {
+	background: #000;
+	color: #fff;
+	outline: none;
+}
+
+.spoilers-modal-body {
+	background: #fff;
+	border: 1px solid #000000;
+	margin: 4px;
+	padding: 12px 16px;
+	font-size: 20px;
+	line-height: 1.35;
+	color: #000;
+	user-select: text;
+	overflow-y: auto;
+	max-height: 60vh;
+}
+
+.spoiler-entry {
+	padding: 3px 0;
+}
+
+.spoiler-film {
+	color: #000080;
+	font-weight: bold;
+}
+
 @media (max-width: 768px) {
 	.launcher-window,
 	.photography-window,
@@ -905,7 +1106,8 @@
 	.documents-window,
 	.dosbox-window,
 	.games-window,
-	.contact-window {
+	.contact-window,
+	.trash-window {
 		width: 90vw;
 		max-width: 480px;
 		height: 70vh;
@@ -931,7 +1133,8 @@
 	.documents-window,
 	.dosbox-window,
 	.games-window,
-	.contact-window {
+	.contact-window,
+	.trash-window {
 		width: 88vw;
 		max-width: 400px;
 		height: 68vh;
@@ -954,7 +1157,8 @@
 	.documents-window,
 	.dosbox-window,
 	.games-window,
-	.contact-window {
+	.contact-window,
+	.trash-window {
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
@@ -976,6 +1180,11 @@
 		width: 92px;
 		margin: 0;
 		flex: 0 0 92px;
+	}
+
+	.desktop-trash-icon {
+		right: auto;
+		bottom: auto;
 	}
 
 	.desktop-app-icon img {

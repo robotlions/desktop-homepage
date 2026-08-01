@@ -20,7 +20,8 @@ export function registerAppIconDrag(dotNetRef) {
 		'desktop-icon-websites': { left: 20, top: 162 },
 		'desktop-icon-photography': { left: 20, top: 312 },
 		'desktop-icon-documents': { left: 150, top: 12 },
-		'desktop-icon-email': { left: 150, top: 162 }
+		'desktop-icon-email': { left: 150, top: 162 },
+		'desktop-icon-trash': { corner: true }
 	};
 
 	var icons = Array.prototype.slice.call(document.querySelectorAll('.desktop-app-icon'));
@@ -49,9 +50,15 @@ export function registerAppIconDrag(dotNetRef) {
 				icon.style.top = newTop + 'px';
 				try { dotNetRef.invokeMethodAsync('OnAppIconMoved', icon.id, newLeft, newTop).catch(function () { }); } catch (e2) { }
 			} else {
-				icon.style.left = def.left + 'px';
-				icon.style.top = def.top + 'px';
-				try { dotNetRef.invokeMethodAsync('OnAppIconMoved', icon.id, def.left, def.top).catch(function () { }); } catch (e2) { }
+				if (def && def.corner) {
+					icon.style.left = '';
+					icon.style.top = '';
+					try { dotNetRef.invokeMethodAsync('OnAppIconMoved', icon.id, -1, -1).catch(function () { }); } catch (e2) { }
+				} else {
+					icon.style.left = def.left + 'px';
+					icon.style.top = def.top + 'px';
+					try { dotNetRef.invokeMethodAsync('OnAppIconMoved', icon.id, def.left, def.top).catch(function () { }); } catch (e2) { }
+				}
 			}
 		};
 
@@ -155,6 +162,7 @@ export function registerDesktopWindowDrag() {
 	bindWindow('dosbox-window', 'dosbox-titlebar');
 	bindWindow('games-window', 'games-titlebar');
 	bindWindow('contact-window', 'contact-titlebar');
+	bindWindow('trash-window', 'trash-titlebar');
 }
 
 export function unregisterDesktopWindowDrag() {
