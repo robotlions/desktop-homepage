@@ -279,6 +279,8 @@ export function registerDesktopWindowDrag() {
 	bindWindow('photography-window', 'photography-titlebar');
 	bindWindow('websites-window', 'websites-titlebar');
 	bindWindow('documents-window', 'documents-titlebar');
+	bindWindow('dosbox-window', 'dosbox-titlebar');
+	bindWindow('games-window', 'games-titlebar');
 }
 
 export function unregisterDesktopWindowDrag() {
@@ -354,4 +356,34 @@ export function bringToFront(windowId) {
 	if (!win) return;
 	_topZ += 1;
 	win.style.zIndex = _topZ;
+}
+
+var _dosbox = null;
+var _dosboxBooted = false;
+
+export function startDosbox(gameUrl) {
+	if (_dosboxBooted) return _dosbox;
+	var container = document.getElementById('dosbox-container');
+	if (!container) return null;
+	var loading = document.getElementById('dosbox-loading');
+	if (loading) loading.remove();
+	if (typeof Dos === 'undefined') {
+		container.innerHTML = '<div class="dosbox-error">DOSBOX ENGINE FAILED TO LOAD</div>';
+		return null;
+	}
+	_dosboxBooted = true;
+	try {
+		var options = {
+			pathPrefix: 'https://cdn.jsdelivr.net/npm/emulators@8.4.1/dist/',
+			autoStart: true
+		};
+		if (gameUrl) options.url = gameUrl;
+		_dosbox = Dos(container, options);
+		return _dosbox;
+	} catch (e) {
+		console.error('DOSBox failed to start:', e);
+		container.innerHTML = '<div class="dosbox-error">DOSBOX FAILED TO START</div>';
+		_dosboxBooted = false;
+		return null;
+	}
 }
