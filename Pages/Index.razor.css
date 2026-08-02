@@ -794,6 +794,7 @@
 	font-family: 'VT323', monospace;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 }
 
 .contact-titlebar {
@@ -850,6 +851,8 @@
 	padding: 12px;
 	background: #fff;
 	border: 1px solid #000000;
+	min-height: 0;
+	overflow-y: auto;
 }
 
 .contact-label {
@@ -1123,6 +1126,26 @@
 
 	.desktop-app-icon-label {
 		font-size: 15px;
+	}
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+	.launcher-window,
+	.photography-window,
+	.websites-window,
+	.documents-window,
+	.dosbox-window,
+	.games-window,
+	.contact-window,
+	.trash-window {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 92vw;
+		max-width: 700px;
+		height: 55vh;
+		max-height: 240px;
+		min-height: 0;
 	}
 }
 
