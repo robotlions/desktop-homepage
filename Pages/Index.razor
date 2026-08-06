@@ -194,6 +194,12 @@
 					</span>
 					<span class="launcher-label">The Bard's Tale</span>
 				</div>
+				<div class="games-link" role="button" tabindex="0" @onclick="OpenCredits" @onkeydown="OnCreditsKeyDown">
+					<span class="launcher-icon" aria-hidden="true">
+						<img src="icons/NOTEP001.PNG" alt="CREDITS.TXT" width="64" height="64">
+					</span>
+					<span class="launcher-label">CREDITS.TXT</span>
+				</div>
 			</div>
 		</div>
 
@@ -283,6 +289,52 @@
 				</div>
 			</div>
 		}
+
+		@if (creditsModalOpen)
+		{
+			<div class="readme-modal-overlay" @onclick="CloseCredits">
+				<div class="readme-modal credits-modal" role="dialog" aria-modal="true" aria-label="CREDITS.TXT" @onclick:stopPropagation>
+					<div class="readme-modal-titlebar">
+						<span>CREDITS.TXT</span>
+						<button class="readme-modal-close" @onclick="CloseCredits" aria-label="Close">
+							<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+								<path d="M1 1 L11 11 M11 1 L1 11" stroke="#000" stroke-width="2.5"/>
+							</svg>
+						</button>
+					</div>
+					<div class="readme-modal-body credits-modal-body">
+						<div>I'd like to give thanks to all of the creators who made these games and inspired me to become a developer.</div>
+						<br />
+						<div>QUEST FOR GLORY I: SO YOU WANT TO BE A HERO</div>
+						<div>Copyright (C) 1989 Sierra On-Line, Inc.</div>
+						<div>Created and designed by Lori Ann Cole and Corey Cole.</div>
+						<div>Published by Sierra On-Line.</div>
+						<br />
+						<div>THE BARD'S TALE</div>
+						<div>Copyright (C) 1985 Interplay Productions.</div>
+						<div>Designed and programmed by Michael Cranford.</div>
+						<div>Additional design by Brian Fargo and Roe Adams III.</div>
+						<div>Published by Electronic Arts.</div>
+						<br />
+						<div>POOL OF RADIANCE</div>
+						<div>Copyright (C) 1988 Strategic Simulations, Inc.</div>
+						<div>Directed by Chuck Kroegel; game design by George MacDonald.</div>
+						<div>Scenario by Jim Ward, David Cook, Steve Winter, and Mike Breault.</div>
+						<div>AD&amp;D and Forgotten Realms are trademarks of TSR, Inc.</div>
+						<br />
+						<div>SID MEIER'S CIVILIZATION</div>
+						<div>Copyright (C) 1991 MicroProse Software, Inc.</div>
+						<div>Designed by Sid Meier and Bruce Shelley.</div>
+						<div>Developed and published by MicroProse.</div>
+						<br />
+						<div>Embedded game-play is made possible by js-dos.</div>
+						<div>js-dos by caiiiycuk: <a href="https://js-dos.com/overview.html" target="_blank" rel="noopener noreferrer">JS-DOS.COM</a></div>
+						<br />
+						<div>This site is not affiliated with any of the rights holders above.</div>
+					</div>
+				</div>
+			</div>
+		}
 </div>
 
 @implements IAsyncDisposable
@@ -312,6 +364,7 @@
 	private double emailTop = 162.0;
 	private bool trashOpen = false;
 	private bool spoilersModalOpen = false;
+	private bool creditsModalOpen = false;
 	private bool contactOpen = false;
 	private string contactName = "";
 	private string contactEmail = "";
@@ -338,7 +391,7 @@
 		("- The mother is actually Norman."),
 		("- The three college friends aren't real."),
 		("- They were on Earth all along."),
-		("- Windows 3.1 didn't have a trash can, but it should have.")
+		("- Windows 3.1 didn't have a trash can.")
 	};
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -462,6 +515,18 @@
 		if (e.Key == "Enter" || e.Key == " ")
 		{
 			OpenSpoilers();
+		}
+	}
+
+	private void OpenCredits() => creditsModalOpen = true;
+
+	private void CloseCredits() => creditsModalOpen = false;
+
+	private void OnCreditsKeyDown(KeyboardEventArgs e)
+	{
+		if (e.Key == "Enter" || e.Key == " ")
+		{
+			OpenCredits();
 		}
 	}
 

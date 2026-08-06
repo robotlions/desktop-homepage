@@ -1009,6 +1009,17 @@
 	user-select: text;
 }
 
+.credits-modal {
+	height: 80vh;
+	max-height: 80vh;
+}
+
+.credits-modal-body {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+}
+
 .spoilers-modal-overlay {
 	position: fixed;
 	top: 0;
